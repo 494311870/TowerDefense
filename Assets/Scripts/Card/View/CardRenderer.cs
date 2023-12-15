@@ -1,11 +1,11 @@
-﻿using Battle.Config;
+﻿using Card.Config;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Battle.UI
+namespace Card.View
 {
-    public class Card : MonoBehaviour
+    public class CardRenderer : MonoBehaviour
     {
         public TextMeshProUGUI costText;
         public Image mainSprite;

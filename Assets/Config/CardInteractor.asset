@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeff842c4fb146fb97eb571312d95498, type: 3}
-  m_Name: Battle Session
+  m_Name: CardInteractor
   m_EditorClassIdentifier: 
+  battleSession: {fileID: 11400000, guid: f237fe048d737e04b8c1853081e3fab6, type: 2}
   debugCardConfigs:
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
-  - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
+  - {fileID: 11400000, guid: ddbc9652545999243a2c9de6e1262cf0, type: 2}
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}

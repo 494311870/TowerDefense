@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Battle.Game
+namespace Battle.View
 {
     public class CameraController : MonoBehaviour
     {

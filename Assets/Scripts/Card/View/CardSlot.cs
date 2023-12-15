@@ -1,16 +1,16 @@
 ﻿using System;
-using Battle.Config;
+using Card.Config;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Battle.UI
+namespace Card.View
 {
     public class CardSlot : MonoBehaviour
     {
-        public Card card;
+        public CardRenderer cardRenderer;
         public Button useButton;
         
-        public event Action<Card> UseCardEvent;
+        public event Action<CardRenderer> UseCardEvent;
 
 
         private void OnEnable()
@@ -26,12 +26,12 @@ namespace Battle.UI
         
         private void OnUseButtonClicked()
         {
-            UseCardEvent?.Invoke(card);
+            UseCardEvent?.Invoke(cardRenderer);
         }
 
         public void Refresh(CardConfig cardConfig)
         {
-            card.Config = cardConfig;
+            cardRenderer.Config = cardConfig;
         }
     }
 }

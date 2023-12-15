@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Battle.Config;
+using UnityEngine;
 
-namespace Battle.Config
+namespace Card.Config
 {
     [CreateAssetMenu(menuName = "Battle/Config/Card")]
     public class CardConfig : ScriptableObject

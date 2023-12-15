@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1639fe1f76794742ba272485e2111f7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 1915470778915824055}
+  cardRenderer: {fileID: 1915470778915824055}
   useButton: {fileID: 1619348033158110644}
 --- !u!114 &1915470778915824055
 MonoBehaviour:

@@ -6,10 +6,6 @@ namespace Battle.Config
     public class UnitConfig : ScriptableObject
     {
         public GameObject prefab;
-        public int health;
-        public int moveSpeed;
-        public int attackDamage;
-        public int attackSpeed;
-        public int attackRange;
+        public UnitData unitData;
     }
 }

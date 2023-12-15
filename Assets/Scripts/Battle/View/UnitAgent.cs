@@ -1,41 +1,45 @@
+using System;
+using Battle.Config;
 using UnityEngine;
 
-namespace Battle.Game
+namespace Battle.View
 {
-    public class UnitAgent : MonoBehaviour, IAttackTarget
+    public class UnitAgent : MonoBehaviour
     {
         public SpriteRenderer characterSprite;
         public Animator unitAnimator;
         public Rigidbody2D unitRigidbody;
-        public float moveSpeed = 4.0f;
+        public Collider2D unitCollider;
         public bool noBlood = false;
 
-        public int initialHp = 50;
-        public int attackPower = 15;
-        public int defensivePower = 5;
-        
-        private int _currentAttack = 0;
-        private float _timeSinceAttack = 0.0f;
+        private int _currentAttackStep = 0;
+
+        private UnitData _data;
         private float _delayToIdle = 0.0f;
         private float _horizontal;
-    
-        private int _currentHp;
+        private float _timeSinceAttack = 0.0f;
+        private float _moveSpeed;
+        public bool DataInvalid => _data == null;
+
+        public Vector2 Center => (Vector2) this.transform.position + unitCollider.offset;
+
 
         private void Start()
         {
             unitAnimator.SetBool("Grounded", true);
-            _currentHp = initialHp;
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
+            if (_data == null)
+                return;
+
             // Increase timer that controls attack combo
             _timeSinceAttack += Time.deltaTime;
 
             // -- Handle input and movement --
             float inputX = _horizontal;
-
             // Swap direction of sprite depending on walk direction
             if (inputX > 0)
             {
@@ -45,9 +49,6 @@ namespace Battle.Game
             {
                 characterSprite.flipX = true;
             }
-
-            // Move
-            unitRigidbody.velocity = new Vector2(inputX * moveSpeed, unitRigidbody.velocity.y);
 
             //Run
             if (Mathf.Abs(inputX) > Mathf.Epsilon)
@@ -64,6 +65,27 @@ namespace Battle.Game
                 if (_delayToIdle < 0)
                     EnterIdle();
             }
+        }
+
+        private void FixedUpdate()
+        {
+            // -- Handle input and movement --
+            float inputX = _horizontal;
+            _horizontal = 0;
+            // Move
+            unitRigidbody.velocity = new Vector2(inputX * _moveSpeed, unitRigidbody.velocity.y);
+        }
+
+
+        public void Hurt(int damage)
+        {
+            // unitAnimator.SetTrigger("Hurt");
+        }
+
+        public void SetData(UnitData value)
+        {
+            _data = value;
+            _moveSpeed = _data.MoveSpeed;
         }
 
         private void EnterRun()
@@ -86,43 +108,31 @@ namespace Battle.Game
             if (!CanAttack())
                 return;
 
-            _currentAttack++;
+            _currentAttackStep++;
 
             // Loop back to one after third attack
-            if (_currentAttack > 3)
-                _currentAttack = 1;
+            if (_currentAttackStep > 3)
+                _currentAttackStep = 1;
 
             // Reset Attack combo if time since last attack is too large
             if (_timeSinceAttack > 1.0f)
-                _currentAttack = 1;
+                _currentAttackStep = 1;
 
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-            unitAnimator.SetTrigger("Attack" + _currentAttack);
+            unitAnimator.SetTrigger("Attack" + _currentAttackStep);
 
             // Reset timer
             _timeSinceAttack = 0.0f;
         }
 
- 
-        public void Hurt(int damage)
-        {
-            _currentHp -= Mathf.Max(0, damage - defensivePower);
-            if (_currentHp <= 0)
-            {
-                Death();
-                return;
-            }
-            unitAnimator.SetTrigger("Hurt");
-        }
-
         public void Death()
         {
+            this.gameObject.layer = LayerMask.NameToLayer("Corpse");
             unitAnimator.SetBool("noBlood", noBlood);
             unitAnimator.SetTrigger("Death");
-        
-            Destroy(this.gameObject,0.5f);
-        }
 
+            Destroy(this.gameObject, 1.0f);
+        }
 
         public void InputHorizontal(float horizontal)
         {

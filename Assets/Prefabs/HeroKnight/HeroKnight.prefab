@@ -171,7 +171,7 @@ MonoBehaviour:
   characterSprite: {fileID: 2954181336601895002}
   unitAnimator: {fileID: 2655505060201611074}
   unitRigidbody: {fileID: 8942925490989933264}
-  moveSpeed: 4
+  unitCollider: {fileID: 9117128348835321587}
   noBlood: 0
 --- !u!114 &2940508127261088033
 MonoBehaviour:
@@ -186,7 +186,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 5350086350931174134}
-  attackRange: 1.5
   checkLayerMask:
     serializedVersion: 2
     m_Bits: 0

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Battle.Config;
+using Card.Config;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Battle.UI
+namespace Card.View
 {
     public class CardSlots : MonoBehaviour
     {
@@ -20,7 +20,7 @@ namespace Battle.UI
             _cardSlots?.ForEach(x => x.UseCardEvent -= OnUseCardEvent);
         }
 
-        public void Refresh(List<CardConfig> cardConfigs)
+        public void Refresh(IReadOnlyList<CardConfig> cardConfigs)
         {
             _cardSlots ??= new List<CardSlot>();
             _cardSlots.ForEach(x => x.gameObject.SetActive(false));
@@ -52,9 +52,9 @@ namespace Battle.UI
             return cardSlot;
         }
 
-        private void OnUseCardEvent(Card card)
+        private void OnUseCardEvent(CardRenderer cardRenderer)
         {
-            UseCardEvent?.Invoke(card.Config);
+            UseCardEvent?.Invoke(cardRenderer.Config);
         }
     }
 }
