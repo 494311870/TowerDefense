@@ -1,16 +1,17 @@
-﻿using System;
-using Card.Config;
+﻿#region
+
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Card.View
+#endregion
+
+namespace Battle.Card
 {
     public class CardSlot : MonoBehaviour
     {
         public CardRenderer cardRenderer;
         public Button useButton;
-        
-        public event Action<CardRenderer> UseCardEvent;
 
 
         private void OnEnable()
@@ -20,10 +21,12 @@ namespace Card.View
 
         private void OnDisable()
         {
-            useButton.onClick.RemoveListener(OnUseButtonClicked);            
+            useButton.onClick.RemoveListener(OnUseButtonClicked);
         }
-        
-        
+
+        public event Action<CardRenderer> UseCardEvent;
+
+
         private void OnUseButtonClicked()
         {
             UseCardEvent?.Invoke(cardRenderer);

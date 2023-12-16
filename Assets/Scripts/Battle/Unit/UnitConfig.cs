@@ -1,6 +1,10 @@
-﻿using UnityEngine;
+﻿#region
 
-namespace Battle.Config
+using UnityEngine;
+
+#endregion
+
+namespace Battle.Unit
 {
     [CreateAssetMenu(menuName = "Battle/Config/Unit")]
     public class UnitConfig : ScriptableObject

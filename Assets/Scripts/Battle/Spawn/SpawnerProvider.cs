@@ -1,8 +1,11 @@
-﻿using System;
-using Battle.View.Spawn;
+﻿#region
+
+using Battle.Shared;
 using UnityEngine;
 
-namespace Battle
+#endregion
+
+namespace Battle.Spawn
 {
     public class SpawnerProvider : MonoBehaviour
     {
@@ -13,7 +16,7 @@ namespace Battle
 
         private void OnEnable()
         {
-            battleSession.ProvideSpawner(spawner,ownerId);
+            battleSession.ProvideSpawner(spawner, ownerId);
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using UnityEngine;
 
-namespace Battle.Config
+#endregion
+
+namespace Battle.Unit
 {
     [Serializable]
     public class UnitData
@@ -19,6 +23,6 @@ namespace Battle.Config
         public int AttackDamage => attackDamage;
         public int AttackSpeed => attackSpeed;
         public int AttackRange => attackRange;
-        public int FriendSpace => friendSpace;        
+        public int FriendSpace => friendSpace;
     }
 }

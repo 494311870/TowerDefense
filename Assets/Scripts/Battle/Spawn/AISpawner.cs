@@ -1,17 +1,19 @@
-﻿using System;
+﻿#region
+
 using System.Collections;
-using System.Collections.Generic;
-using Battle.Config;
+using Battle.Unit;
 using UnityEngine;
 
-namespace Battle.View.Spawn
+#endregion
+
+namespace Battle.Spawn
 {
     public class AISpawner : Spawner
     {
         public float spawnDelay = 5.0f;
         public float spawnInterval = 5.0f;
         public UnitConfig unitConfig;
-        
+
         private void Start()
         {
             StartCoroutine(AutoSpawn());
@@ -19,11 +21,11 @@ namespace Battle.View.Spawn
 
         private IEnumerator AutoSpawn()
         {
-            yield return  new WaitForSeconds(spawnDelay);
+            yield return new WaitForSeconds(spawnDelay);
             while (true)
             {
-                yield return new WaitForSeconds(spawnInterval);                
-                Spawn(unitConfig);                    
+                yield return new WaitForSeconds(spawnInterval);
+                Spawn(unitConfig);
             }
         }
     }

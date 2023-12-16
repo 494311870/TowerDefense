@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
-using Battle.View.Spawn;
+﻿#region
+
+using System.Collections.Generic;
+using Battle.Spawn;
 using UnityEngine;
 
-namespace Battle
+#endregion
+
+namespace Battle.Shared
 {
     [CreateAssetMenu(fileName = "BattleSession", menuName = "Battle/BattleSession")]
     public class BattleSession : ScriptableObject

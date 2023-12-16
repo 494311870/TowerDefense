@@ -1,9 +1,10 @@
-﻿using Card.Config;
-using Card.View;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿#region
 
-namespace Card
+using UnityEngine;
+
+#endregion
+
+namespace Battle.Card
 {
     public class CardSlotsController : MonoBehaviour
     {
@@ -20,7 +21,7 @@ namespace Card
 
         private void OnDisable()
         {
-            cardSlots.UseCardEvent -= CardSlotsOnUseCardEvent;            
+            cardSlots.UseCardEvent -= CardSlotsOnUseCardEvent;
         }
 
         private void CardSlotsOnUseCardEvent(CardConfig config)

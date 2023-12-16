@@ -1,12 +1,11 @@
 ﻿#region
 
 using System.Collections.Generic;
-using Battle.Util;
 using UnityEngine;
 
 #endregion
 
-namespace Battle.View
+namespace Battle.Shared
 {
     public class TargetScanner
     {

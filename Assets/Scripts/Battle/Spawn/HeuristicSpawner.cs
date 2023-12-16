@@ -1,8 +1,6 @@
-﻿namespace Battle.View.Spawn
+﻿namespace Battle.Spawn
 {
     public class HeuristicSpawner : Spawner
     {
-        
-    
     }
 }

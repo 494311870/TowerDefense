@@ -1,7 +1,11 @@
-using Battle.Config;
+#region
+
+using Battle.Unit;
 using UnityEngine;
 
-namespace Battle.View.Spawn
+#endregion
+
+namespace Battle.Spawn
 {
     public class Spawner : MonoBehaviour
     {
@@ -14,12 +18,12 @@ namespace Battle.View.Spawn
         public void Spawn(UnitConfig unitConfig)
         {
             GameObject instance = Instantiate(unitConfig.prefab, container);
-            
+
             ResetTransform(instance.transform);
-            ResetUnit(instance,unitConfig);
+            ResetUnit(instance, unitConfig);
         }
 
-     
+
         private void ResetUnit(GameObject instance, UnitConfig unitConfig)
         {
             instance.layer = LayerMask.NameToLayer(friendLayer);

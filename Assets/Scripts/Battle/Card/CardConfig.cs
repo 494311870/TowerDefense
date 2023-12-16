@@ -1,7 +1,11 @@
-﻿using Battle.Config;
+﻿#region
+
+using Battle.Unit;
 using UnityEngine;
 
-namespace Card.Config
+#endregion
+
+namespace Battle.Card
 {
     [CreateAssetMenu(menuName = "Battle/Config/Card")]
     public class CardConfig : ScriptableObject
@@ -9,7 +13,7 @@ namespace Card.Config
         [SerializeField] private UnitConfig unitConfig;
         public Sprite mainSprite;
         public int cost;
-        
+
         public UnitConfig UnitConfig => unitConfig;
     }
 }

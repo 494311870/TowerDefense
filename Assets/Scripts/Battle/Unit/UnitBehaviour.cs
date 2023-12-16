@@ -1,23 +1,26 @@
-﻿using Battle.Config;
-using Battle.Util;
+﻿#region
+
+using Battle.Shared;
 using UnityEngine;
 
-namespace Battle.View
+#endregion
+
+namespace Battle.Unit
 {
     public class UnitBehaviour : MonoBehaviour, IAttackTarget
     {
         public UnitAgent agent;
-
-        private Transform _moveTarget;
         private Vector2 _centerOffset;
 
 
         private int _currentHp;
-        private bool _isDead;
-        private UnitData _unitData;
 
         private TargetScanner _enemyScanner;
         private TargetScanner _friendScanner;
+        private bool _isDead;
+
+        private Transform _moveTarget;
+        private UnitData _unitData;
 
         private void Awake()
         {
@@ -28,6 +31,17 @@ namespace Battle.View
         private void Update()
         {
             UpdateState();
+        }
+
+        public void Hurt(int damage)
+        {
+            if (_isDead)
+                return;
+
+            _currentHp -= Mathf.Max(0, damage);
+
+            if (_currentHp <= 0)
+                Death();
         }
 
         private void UpdateState()
@@ -66,7 +80,7 @@ namespace Battle.View
 
         private Vector2 GetMoveDirection()
         {
-            Vector2 result = _moveTarget.position - this.transform.position;
+            Vector2 result = _moveTarget.position - transform.position;
             return result.normalized;
         }
 
@@ -87,21 +101,7 @@ namespace Battle.View
             if (target == null)
                 return;
 
-            if (target.TryGetComponent(out IAttackTarget attackTarget))
-            {
-                attackTarget.Hurt(_unitData.AttackDamage);
-            }
-        }
-
-        public void Hurt(int damage)
-        {
-            if (_isDead)
-                return;
-
-            _currentHp -= Mathf.Max(0, damage);
-
-            if (_currentHp <= 0)
-                Death();
+            if (target.TryGetComponent(out IAttackTarget attackTarget)) attackTarget.Hurt(_unitData.AttackDamage);
         }
 
         public void SetData(UnitData unitData)

@@ -1,12 +1,16 @@
-﻿using UnityEngine;
+﻿#region
 
-namespace Battle.Util
+using UnityEngine;
+
+#endregion
+
+namespace Battle.Shared
 {
     public static class CalculateUtil
     {
         public static float ConvertDistance(int distance)
         {
-            return  1.0f * distance / 100;
+            return 1.0f * distance / 100;
         }
 
         public static float CalculateDistance(Vector2 center, Collider2D target)

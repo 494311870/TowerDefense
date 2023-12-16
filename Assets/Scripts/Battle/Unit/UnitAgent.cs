@@ -1,8 +1,10 @@
-using System;
-using Battle.Config;
+#region
+
 using UnityEngine;
 
-namespace Battle.View
+#endregion
+
+namespace Battle.Unit
 {
     public class UnitAgent : MonoBehaviour
     {
@@ -10,18 +12,18 @@ namespace Battle.View
         public Animator unitAnimator;
         public Rigidbody2D unitRigidbody;
         public Collider2D unitCollider;
-        public bool noBlood = false;
+        public bool noBlood;
 
-        private int _currentAttackStep = 0;
+        private int _currentAttackStep;
 
         private UnitData _data;
-        private float _delayToIdle = 0.0f;
+        private float _delayToIdle;
         private float _horizontal;
-        private float _timeSinceAttack = 0.0f;
         private float _moveSpeed;
+        private float _timeSinceAttack;
         public bool DataInvalid => _data == null;
 
-        public Vector2 Center => (Vector2) this.transform.position + unitCollider.offset;
+        public Vector2 Center => (Vector2) transform.position + unitCollider.offset;
 
 
         private void Start()
@@ -41,14 +43,7 @@ namespace Battle.View
             // -- Handle input and movement --
             float inputX = _horizontal;
             // Swap direction of sprite depending on walk direction
-            if (inputX > 0)
-            {
-                characterSprite.flipX = false;
-            }
-            else if (inputX < 0)
-            {
-                characterSprite.flipX = true;
-            }
+            characterSprite.flipX = inputX < 0;
 
             //Run
             if (Mathf.Abs(inputX) > Mathf.Epsilon)
@@ -127,11 +122,11 @@ namespace Battle.View
 
         public void Death()
         {
-            this.gameObject.layer = LayerMask.NameToLayer("Corpse");
+            gameObject.layer = LayerMask.NameToLayer("Corpse");
             unitAnimator.SetBool("noBlood", noBlood);
             unitAnimator.SetTrigger("Death");
 
-            Destroy(this.gameObject, 1.0f);
+            Destroy(gameObject, 1.0f);
         }
 
         public void InputHorizontal(float horizontal)

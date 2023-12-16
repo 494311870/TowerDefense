@@ -1,15 +1,18 @@
-﻿using Card.Config;
+﻿#region
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Card.View
+#endregion
+
+namespace Battle.Card
 {
     public class CardRenderer : MonoBehaviour
     {
         public TextMeshProUGUI costText;
         public Image mainSprite;
-        
+
         private CardConfig _config;
 
         public CardConfig Config

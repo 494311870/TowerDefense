@@ -1,17 +1,19 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
-using Card.Config;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Card.View
+#endregion
+
+namespace Battle.Card
 {
     public class CardSlots : MonoBehaviour
     {
         public CardSlot template;
         public Transform container;
         public LayoutGroup layoutGroup;
-        public event Action<CardConfig> UseCardEvent;
 
         private List<CardSlot> _cardSlots;
 
@@ -19,6 +21,8 @@ namespace Card.View
         {
             _cardSlots?.ForEach(x => x.UseCardEvent -= OnUseCardEvent);
         }
+
+        public event Action<CardConfig> UseCardEvent;
 
         public void Refresh(IReadOnlyList<CardConfig> cardConfigs)
         {

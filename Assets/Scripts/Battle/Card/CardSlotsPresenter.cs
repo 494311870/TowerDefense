@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using Card.Config;
-using Card.View;
+﻿#region
+
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Card
+#endregion
+
+namespace Battle.Card
 {
     public class CardSlotsPresenter : MonoBehaviour
     {
