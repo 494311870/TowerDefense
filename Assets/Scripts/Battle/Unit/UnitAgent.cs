@@ -1,5 +1,6 @@
 #region
 
+using Battle.Shared;
 using UnityEngine;
 
 #endregion
@@ -80,7 +81,7 @@ namespace Battle.Unit
         public void SetData(UnitData value)
         {
             _data = value;
-            _moveSpeed = _data.MoveSpeed;
+            _moveSpeed = CalculateUtil.ConvertSpeed(_data.MoveSpeed);
         }
 
         private void EnterRun()

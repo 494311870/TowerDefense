@@ -17,5 +17,10 @@ namespace Battle.Shared
         {
             return Vector2.Distance(center, target.transform.position);
         }
+
+        public static float ConvertSpeed(int speed)
+        {
+            return 1.0f * speed / 100;
+        }
     }
 }
