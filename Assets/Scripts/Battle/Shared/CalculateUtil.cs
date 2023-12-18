@@ -22,5 +22,11 @@ namespace Battle.Shared
         {
             return 1.0f * speed / 100;
         }
+
+        public static float ConvertAttackInterval(int attackSpeed)
+        {
+            float speed = 1.0f * attackSpeed / 100;
+            return 1.0f / speed;
+        }
     }
 }

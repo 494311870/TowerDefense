@@ -1,6 +1,8 @@
 ﻿#region
 
 using Battle.Shared;
+using Battle.Unit.StateManagement;
+using StateManagement;
 using UnityEngine;
 
 #endregion
@@ -10,27 +12,28 @@ namespace Battle.Unit
     public class UnitBehaviour : MonoBehaviour, IAttackTarget
     {
         public UnitAgent agent;
-        private Vector2 _centerOffset;
-
 
         private int _currentHp;
-
-        private TargetScanner _enemyScanner;
-        private TargetScanner _friendScanner;
         private bool _isDead;
 
-        private Transform _moveTarget;
-        private UnitData _unitData;
+        private StateMachine<UnitBehaviourContext> _stateMachine;
+        private UnitBehaviourContext _context;
 
         private void Awake()
         {
-            _enemyScanner = new TargetScanner();
-            _friendScanner = new TargetScanner();
+            _context = new UnitBehaviourContext()
+            {
+                UnitAgent = agent,
+                EnemyScanner = new CircleTargetScanner(),
+                FriendScanner = new RectTargetScanner(),
+            };
+            _stateMachine = new UnitBehaviourStateMachine(_context);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            UpdateState();
+            _stateMachine.Update(Time.fixedDeltaTime);
+            _stateMachine.CheckTransitions();
         }
 
         public void Hurt(int damage)
@@ -38,86 +41,47 @@ namespace Battle.Unit
             if (_isDead)
                 return;
 
-            _currentHp -= Mathf.Max(0, damage);
+            agent.Hurt(damage);
 
+            _currentHp -= Mathf.Max(0, damage);
             if (_currentHp <= 0)
                 Death();
         }
-
-        private void UpdateState()
-        {
-            if (_isDead)
-                return;
-
-            _enemyScanner.Scan(agent.Center);
-            if (_enemyScanner.Target != null)
-            {
-                TryAttack();
-            }
-            else
-            {
-                Vector2 direction = GetMoveDirection();
-                Vector2 forwardOffset = _friendScanner.ScanRange * direction;
-                _friendScanner.Scan(agent.Center + forwardOffset);
-                // 移动方向有友军，暂停移动
-                if (_friendScanner.Target != null)
-                    return;
-
-                MoveToTarget();
-            }
-        }
-
-        private void MoveToTarget()
-        {
-            if (!_moveTarget)
-                return;
-
-            Vector2 dir = GetMoveDirection();
-
-            float horizontal = dir.x > 0 ? 1 : -1;
-            agent.InputHorizontal(horizontal);
-        }
-
-        private Vector2 GetMoveDirection()
-        {
-            Vector2 result = _moveTarget.position - transform.position;
-            return result.normalized;
-        }
-
-        private void TryAttack()
-        {
-            if (agent.CanAttack())
-                agent.Attack();
-        }
-
 
         /// <summary>
         /// 提供给动画的攻击命中事件
         /// </summary>
         private void OnAttackAnimationEvent()
         {
-            _enemyScanner.Scan(agent.Center);
-            Collider2D target = _enemyScanner.Target;
+            _context.ScanEnemy();
+            Collider2D target = _context.EnemyScanner.Target;
             if (target == null)
                 return;
 
-            if (target.TryGetComponent(out IAttackTarget attackTarget)) attackTarget.Hurt(_unitData.AttackDamage);
+            if (target.TryGetComponent(out IAttackTarget attackTarget))
+                attackTarget.Hurt(_context.UnitOriginalData.AttackDamage);
         }
 
         public void SetData(UnitData unitData)
         {
-            _unitData = unitData;
-            _currentHp = _unitData.Health;
-            _enemyScanner.ScanRange = CalculateUtil.ConvertDistance(_unitData.AttackRange);
-            _friendScanner.ScanRange = CalculateUtil.ConvertDistance(_unitData.FriendSpace);
-            _friendScanner.AddIgnored(agent.unitCollider);
+            _context.UnitOriginalData = unitData;
+            _currentHp = unitData.Health;
 
-            agent.SetData(_unitData);
+            CircleTargetScanner enemyScanner = _context.EnemyScanner;
+            RectTargetScanner friendScanner = _context.FriendScanner;
+            
+            enemyScanner.ScanRange = CalculateUtil.ConvertDistance(unitData.AttackRange);
+            friendScanner.ScanWidth = CalculateUtil.ConvertDistance(unitData.FriendSpace);
+            friendScanner.ScanHeight = agent.unitCollider.bounds.size.y;
+            friendScanner.AddIgnored(agent.unitCollider);
+
+            agent.SetData(unitData);
         }
 
         public void SetMoveTarget(Transform target)
         {
-            _moveTarget = target;
+            _context.DefaultTarget = target;
+            _context.CurrentTarget = target;
         }
 
         public void Death()
@@ -128,12 +92,12 @@ namespace Battle.Unit
 
         public void SetEnemyLayer(LayerMask layerMask)
         {
-            _enemyScanner.LayerMask = layerMask;
+            _context.EnemyScanner.LayerMask = layerMask;
         }
 
         public void SetFriendLayer(LayerMask layerMask)
         {
-            _friendScanner.LayerMask = layerMask;
+            _context.FriendScanner.LayerMask = layerMask;
         }
     }
 }

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6323719953710832613, guid: a4b4a6d32bcb19248a754d6602ffc7e4, type: 3}
   unitData:
-    health: 300
-    moveSpeed: 1
-    attackDamage: 20
-    attackSpeed: 0
+    health: 999
+    moveSpeed: 200
+    attackDamage: 50
+    attackSpeed: 150
     attackRange: 120
     friendSpace: 100

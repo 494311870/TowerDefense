@@ -7,18 +7,16 @@ using UnityEngine;
 
 namespace Battle.Shared
 {
-    public class TargetScanner
+    public abstract class TargetScanner
     {
-        private readonly Collider2D[] _colliderBuffer;
+        protected readonly Collider2D[] ColliderBuffer;
         private int _colliderCount;
         private HashSet<Collider2D> _ignoredSet;
 
-        public TargetScanner()
+        protected TargetScanner()
         {
-            _colliderBuffer = new Collider2D[5];
+            ColliderBuffer = new Collider2D[5];
         }
-
-        public float ScanRange { get; set; }
 
         public Collider2D Target { get; private set; }
 
@@ -32,13 +30,15 @@ namespace Battle.Shared
                 layerMask = LayerMask
             };
 
-            _colliderCount = Physics2D.OverlapCircle(center, ScanRange, filter, _colliderBuffer);
+            _colliderCount = CheckCollider(center, filter);
 
             if (CurrentTargetInRange())
                 return;
 
             Target = GetNearestTarget(center);
         }
+
+        protected abstract int CheckCollider(Vector2 center, ContactFilter2D filter);
 
         private bool CurrentTargetInRange()
         {
@@ -47,7 +47,7 @@ namespace Battle.Shared
 
             for (int index = 0; index < _colliderCount; index++)
             {
-                if (_colliderBuffer[index] == Target)
+                if (ColliderBuffer[index] == Target)
                     return true;
             }
 
@@ -57,11 +57,11 @@ namespace Battle.Shared
         private Collider2D GetNearestTarget(Vector2 center)
         {
             Collider2D result = null;
-            float minDistance = ScanRange;
+            float minDistance = float.MaxValue;
             // 找到距离最近的
             for (int index = 0; index < _colliderCount; index++)
             {
-                Collider2D collider = _colliderBuffer[index];
+                Collider2D collider = ColliderBuffer[index];
                 if (IsIgnored(collider))
                     continue;
 

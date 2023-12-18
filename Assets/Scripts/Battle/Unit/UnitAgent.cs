@@ -1,5 +1,6 @@
 #region
 
+using System;
 using Battle.Shared;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Battle.Unit
 {
-    public class UnitAgent : MonoBehaviour
+    public abstract class UnitAgent : MonoBehaviour
     {
         public SpriteRenderer characterSprite;
         public Animator unitAnimator;
@@ -15,43 +16,35 @@ namespace Battle.Unit
         public Collider2D unitCollider;
         public bool noBlood;
 
+        private float _attackInterval;
         private int _currentAttackStep;
-
-        private UnitData _data;
         private float _delayToIdle;
-        private float _horizontal;
+        private float _inputHorizontal;
         private float _moveSpeed;
+        private float _nextInputHorizontal;
         private float _timeSinceAttack;
-        public bool DataInvalid => _data == null;
+
+        protected UnitData Data { get; private set; }
+        public bool DataInvalid => Data == null;
 
         public Vector2 Center => (Vector2) transform.position + unitCollider.offset;
-
-
-        private void Start()
-        {
-            unitAnimator.SetBool("Grounded", true);
-        }
 
         // Update is called once per frame
         private void Update()
         {
-            if (_data == null)
+            if (Data == null)
                 return;
 
-            // Increase timer that controls attack combo
-            _timeSinceAttack += Time.deltaTime;
-
             // -- Handle input and movement --
-            float inputX = _horizontal;
+            float inputX = _inputHorizontal;
             // Swap direction of sprite depending on walk direction
-            characterSprite.flipX = inputX < 0;
-
+            SwapSpriteToward(inputX);
             //Run
             if (Mathf.Abs(inputX) > Mathf.Epsilon)
             {
                 // Reset timer
                 _delayToIdle = 0.05f;
-                EnterRun();
+                EnterMove();
             }
             //Idle
             else
@@ -63,40 +56,63 @@ namespace Battle.Unit
             }
         }
 
+        public void SwapSpriteToward(float targetDirection)
+        {
+            if (targetDirection > 0)
+            {
+                characterSprite.flipX = false;
+            }
+            else if (targetDirection < 0)
+            {
+                characterSprite.flipX = true;
+            }
+        }
+
         private void FixedUpdate()
         {
+            if (Data == null)
+                return;
+
+            // Increase timer that controls attack combo
+            _timeSinceAttack += Time.fixedDeltaTime;
             // -- Handle input and movement --
-            float inputX = _horizontal;
-            _horizontal = 0;
+            _inputHorizontal = _nextInputHorizontal;
+            // _nextInputHorizontal = 0;
             // Move
-            unitRigidbody.velocity = new Vector2(inputX * _moveSpeed, unitRigidbody.velocity.y);
+            unitRigidbody.velocity = new Vector2(_inputHorizontal * _moveSpeed, unitRigidbody.velocity.y);
+        }
+
+        private void OnValidate()
+        {
+            if (characterSprite == null)
+                characterSprite = GetComponentInChildren<SpriteRenderer>();
+
+            if (unitAnimator == null)
+                unitAnimator = GetComponentInChildren<Animator>();
+
+            if (unitRigidbody == null)
+                unitRigidbody = GetComponentInChildren<Rigidbody2D>();
+
+            if (unitCollider == null)
+                unitCollider = GetComponentInChildren<Collider2D>();
         }
 
 
-        public void Hurt(int damage)
+        public virtual void Hurt(int damage)
         {
             // unitAnimator.SetTrigger("Hurt");
         }
 
         public void SetData(UnitData value)
         {
-            _data = value;
-            _moveSpeed = CalculateUtil.ConvertSpeed(_data.MoveSpeed);
+            Data = value;
+            _moveSpeed = CalculateUtil.ConvertSpeed(Data.MoveSpeed);
+            _attackInterval = CalculateUtil.ConvertAttackInterval(Data.AttackSpeed);
         }
 
-        private void EnterRun()
+        public virtual bool CanAttack()
         {
-            unitAnimator.SetInteger("AnimState", 1);
-        }
-
-        private void EnterIdle()
-        {
-            unitAnimator.SetInteger("AnimState", 0);
-        }
-
-        public bool CanAttack()
-        {
-            return _timeSinceAttack > 0.25f;
+            return _timeSinceAttack > _attackInterval;
         }
 
         public void Attack()
@@ -130,9 +146,22 @@ namespace Battle.Unit
             Destroy(gameObject, 1.0f);
         }
 
+        public void WaitingInPlace() => InputHorizontal(0);
+
         public void InputHorizontal(float horizontal)
         {
-            _horizontal = horizontal;
+            // _inputHorizontal = horizontal;
+            _nextInputHorizontal = horizontal;
+        }
+
+        protected virtual void EnterMove()
+        {
+            unitAnimator.SetInteger("AnimState", 1);
+        }
+
+        protected virtual void EnterIdle()
+        {
+            unitAnimator.SetInteger("AnimState", 0);
         }
     }
 }
