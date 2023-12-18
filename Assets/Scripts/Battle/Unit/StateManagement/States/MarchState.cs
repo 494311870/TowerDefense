@@ -1,16 +1,19 @@
 ﻿using StateManagement;
+using UnityEngine;
 
 namespace Battle.Unit.StateManagement.States
 {
-    public class IdleState : State<UnitBehaviourContext>
+    public class MarchState : MoveState
     {
         public override void Enter()
         {
-            Context.UnitAgent.WaitingInPlace();
+            base.Enter();
+            Context.CurrentTarget = Context.MarchTarget;
         }
 
         public override void Update(float deltaTime)
         {
+            base.Update(deltaTime);
             Context.ScanEnemy();
         }
     }

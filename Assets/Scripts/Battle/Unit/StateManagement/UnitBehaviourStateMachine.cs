@@ -10,36 +10,46 @@ namespace Battle.Unit.StateManagement
         public UnitBehaviourStateMachine(UnitBehaviourContext context) : base(context)
         {
             AddState<IdleState>();
+            AddState<MarchState>();
+            AddState<CombatState>();
             AddState<AttackState>();
             AddState<DeathState>();
-            AddState<PursuitState>();
 
-            AddTransition<PursuitState, AttackState>(TargetInAttackRange);
-            AddTransition<AttackState, PursuitState>(TargetOutOfAttackRange);
-            AddTransition<IdleState, PursuitState>(DiscoveryTarget);
+            AddTransition<IdleState, CombatState>(DiscoveryAttackTarget);
+            AddTransition<IdleState, MarchState>(HasMarchTarget);
 
+            AddTransition<MarchState, CombatState>(DiscoveryAttackTarget);
+
+            AddTransition<CombatState, AttackState>(TargetInAttackRange);
+            AddTransition<CombatState, IdleState>(TargetOutOfThreatRange);
+            
+            AddTransition<AttackState, CombatState>(TargetOutOfAttackRange);
 
             AddTransition<AnyState, DeathState>(IsDead);
             AddTransition<AnyState, IdleState>(NoTarget);
-            AddTransition<AnyState, PursuitState>(HasTarget);
         }
 
-   
-
-        private bool DiscoveryTarget(UnitBehaviourContext context)
+        private static bool HasMarchTarget(UnitBehaviourContext context)
         {
-            context.ScanEnemy();
-            return context.EnemyScanner.Target != null;            
+            return context.MarchTarget = null;
         }
 
-        private bool NoTarget(UnitBehaviourContext context)
+        private static bool DiscoveryAttackTarget(UnitBehaviourContext context)
+        {
+            return context.EnemyScanner.Target != null;
+        }
+
+        private static bool NoTarget(UnitBehaviourContext context)
         {
             return context.CurrentTarget == null;
         }
         
-        private bool HasTarget(UnitBehaviourContext context)
+        private static bool TargetOutOfThreatRange(UnitBehaviourContext context)
         {
-            return context.CurrentTarget != null;
+            if (context.CurrentTarget == null)
+                return true;
+
+            return !TargetInRange(context,context.UnitOriginalData.ThreatRange);
         }
 
         private static bool TargetOutOfAttackRange(UnitBehaviourContext context)
@@ -50,18 +60,22 @@ namespace Battle.Unit.StateManagement
         private static bool TargetInAttackRange(UnitBehaviourContext context)
         {
             Transform currentTarget = context.CurrentTarget;
-            // UnitEntity unitEntity = context.UnitEntity;
-            IReadonlyUnitData unitData = context.UnitOriginalData;
+            if (currentTarget == null)
+                return false;
+
+            return TargetInRange(context, context.UnitOriginalData.AttackRange);
+        }
+
+        private static bool TargetInRange(UnitBehaviourContext context, int range)
+        {
+            Transform currentTarget = context.CurrentTarget;
             UnitAgent unitAgent = context.UnitAgent;
 
-            if (currentTarget != null)
-            {
-                Vector2 toTargetFlat = currentTarget.position - unitAgent.transform.position;
-                float attackRange = CalculateUtil.ConvertDistance(unitData.AttackRange);
+            Vector2 toTargetFlat = currentTarget.position - unitAgent.transform.position;
+            float attackRange = CalculateUtil.ConvertDistance(range);
 
-                if (toTargetFlat.sqrMagnitude <= attackRange * attackRange)
-                    return true;
-            }
+            if (toTargetFlat.sqrMagnitude <= attackRange * attackRange)
+                return true;
 
             return false;
         }

@@ -11,9 +11,8 @@ namespace Battle.Unit.StateManagement
         // public UnitEntity UnitEntity;
 
 
-        public Transform DefaultTarget;
+        public Transform MarchTarget;
         public Transform CurrentTarget;
-
 
         public CircleTargetScanner EnemyScanner;
         public RectTargetScanner FriendScanner;

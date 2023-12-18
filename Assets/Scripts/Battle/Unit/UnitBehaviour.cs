@@ -70,7 +70,7 @@ namespace Battle.Unit
             CircleTargetScanner enemyScanner = _context.EnemyScanner;
             RectTargetScanner friendScanner = _context.FriendScanner;
             
-            enemyScanner.ScanRange = CalculateUtil.ConvertDistance(unitData.AttackRange);
+            enemyScanner.ScanRange = CalculateUtil.ConvertDistance(unitData.ThreatRange);
             friendScanner.ScanWidth = CalculateUtil.ConvertDistance(unitData.FriendSpace);
             friendScanner.ScanHeight = agent.unitCollider.bounds.size.y;
             friendScanner.AddIgnored(agent.unitCollider);
@@ -80,7 +80,7 @@ namespace Battle.Unit
 
         public void SetMoveTarget(Transform target)
         {
-            _context.DefaultTarget = target;
+            _context.MarchTarget = target;
             _context.CurrentTarget = target;
         }
 
