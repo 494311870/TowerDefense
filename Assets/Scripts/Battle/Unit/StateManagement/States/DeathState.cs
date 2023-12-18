@@ -6,7 +6,6 @@ namespace Battle.Unit.StateManagement.States
     {
         public override void Enter()
         {
-            Context.IsDead = true;
             Context.UnitAgent.WaitingInPlace();
             Context.UnitAgent.Death();
         }

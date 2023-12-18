@@ -18,6 +18,7 @@ namespace StateManagement
         private readonly Dictionary<IState, List<Transition<T>>> _transitionMap = new();
 
         private IState _currentState;
+        private IState _jumpToState;
 
         public StateMachine(T context)
         {
@@ -72,18 +73,22 @@ namespace StateManagement
 
         public void Update(float deltaTime)
         {
+            if (_jumpToState != null)
+            {
+                IState jumpTo = _jumpToState;
+                _jumpToState = null;
+                Enter(jumpTo);
+                return;
+            }
+            
             _currentState?.Update(deltaTime);
-            if (_currentState != null) 
-                Debug.Log($"Update {_currentState.GetType().Name}");
+            
+            CheckTransitions();
         }
 
-        public void CheckTransitions()
+        private void CheckTransitions()
         {
-            Transition<T> result = null;
-            result = FirstCanExecuteTransition(_anyState);
-
-            if (result == null)
-                FirstCanExecuteTransition(_currentState);
+            Transition<T> result = FindCanExecuteTransition(_anyState) ?? FindCanExecuteTransition(_currentState);
 
             if (result == null)
                 return;
@@ -91,13 +96,15 @@ namespace StateManagement
             Enter(result.To);
         }
 
-        private Transition<T> FirstCanExecuteTransition(IState state)
+        private Transition<T> FindCanExecuteTransition(IState state)
         {
             if (state == null)
                 return null;
 
             if (!_transitionMap.TryGetValue(state, out List<Transition<T>> transitions))
+            {
                 return null;
+            }
 
             return transitions.FirstOrDefault(transition => transition.Statement(_context));
         }
@@ -107,6 +114,15 @@ namespace StateManagement
             _currentState?.Exit();
             _currentState = state;
             state.Enter();
+        }
+
+        public void Enter<TState>() where TState : State<T>, new()
+        {
+            Type stateType = typeof(TState);
+            if (!_stateMap.TryGetValue(stateType, out IState state))
+                return;
+
+            _jumpToState = state;
         }
     }
 }

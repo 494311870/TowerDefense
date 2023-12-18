@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using Battle.Shared;
 using Battle.Unit.StateManagement;
 using StateManagement;
@@ -33,7 +34,6 @@ namespace Battle.Unit
         private void FixedUpdate()
         {
             _stateMachine.Update(Time.fixedDeltaTime);
-            _stateMachine.CheckTransitions();
         }
 
         public void Hurt(int damage)
@@ -81,7 +81,6 @@ namespace Battle.Unit
         public void SetMoveTarget(Transform target)
         {
             _context.MarchTarget = target;
-            _context.CurrentTarget = target;
         }
 
         public void Death()

@@ -16,6 +16,7 @@ MonoBehaviour:
   unitData:
     health: 999
     moveSpeed: 200
+    threatRange: 240
     attackDamage: 50
     attackSpeed: 150
     attackRange: 120

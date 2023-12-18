@@ -24,8 +24,8 @@ namespace Battle.Spawn
             yield return new WaitForSeconds(spawnDelay);
             while (true)
             {
-                yield return new WaitForSeconds(spawnInterval);
                 Spawn(unitConfig);
+                yield return new WaitForSeconds(spawnInterval);
             }
         }
     }

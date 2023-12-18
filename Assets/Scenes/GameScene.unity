@@ -422,7 +422,7 @@ MonoBehaviour:
   friendLayer: UnitB
   enemyLayer: UnitA
   spawnDelay: 1
-  spawnInterval: 2
+  spawnInterval: 200
   unitConfig: {fileID: 11400000, guid: 493c90b5489a61c42835559c094334a0, type: 2}
 --- !u!1 &1976807833
 GameObject:
