@@ -1,7 +1,5 @@
 #region
 
-using System;
-using Battle.Shared;
 using UnityEngine;
 
 #endregion
@@ -10,37 +8,32 @@ namespace Battle.Unit
 {
     public abstract class UnitAgent : MonoBehaviour
     {
+        private static readonly int AnimStateHash = Animator.StringToHash("AnimState");
+        private static readonly int NoBloodHash = Animator.StringToHash("noBlood");
+        private static readonly int DeathHash = Animator.StringToHash("Death");
+
         public SpriteRenderer characterSprite;
         public Animator unitAnimator;
         public Rigidbody2D unitRigidbody;
         public Collider2D unitCollider;
+        public int attackMaxStep = 3;
         public bool noBlood;
 
-        private float _attackInterval;
         private int _currentAttackStep;
         private float _delayToIdle;
-        private float _inputHorizontal;
-        private float _moveSpeed;
-        private float _nextInputHorizontal;
-        private float _timeSinceAttack;
+        private float _horizontalVelocity;
 
-        protected UnitData Data { get; private set; }
-        public bool DataInvalid => Data == null;
-
-        public Vector2 Center => (Vector2) transform.position + unitCollider.offset;
+        public Vector2 Center => (Vector2)transform.position + unitCollider.offset;
 
         // Update is called once per frame
         private void Update()
         {
-            if (Data == null)
-                return;
-
             // -- Handle input and movement --
-            float inputX = _inputHorizontal;
+            float velocityX = _horizontalVelocity;
             // Swap direction of sprite depending on walk direction
-            SwapSpriteToward(inputX);
+            SwapSpriteToward(velocityX);
             //Run
-            if (Mathf.Abs(inputX) > Mathf.Epsilon)
+            if (Mathf.Abs(velocityX) > Mathf.Epsilon)
             {
                 // Reset timer
                 _delayToIdle = 0.05f;
@@ -56,30 +49,10 @@ namespace Battle.Unit
             }
         }
 
-        public void SwapSpriteToward(float targetDirection)
-        {
-            if (targetDirection > 0)
-            {
-                characterSprite.flipX = false;
-            }
-            else if (targetDirection < 0)
-            {
-                characterSprite.flipX = true;
-            }
-        }
-
         private void FixedUpdate()
         {
-            if (Data == null)
-                return;
-
-            // Increase timer that controls attack combo
-            _timeSinceAttack += Time.fixedDeltaTime;
-            // -- Handle input and movement --
-            _inputHorizontal = _nextInputHorizontal;
-            // _nextInputHorizontal = 0;
             // Move
-            unitRigidbody.velocity = new Vector2(_inputHorizontal * _moveSpeed, unitRigidbody.velocity.y);
+            unitRigidbody.velocity = new Vector2(_horizontalVelocity, unitRigidbody.velocity.y);
         }
 
         private void OnValidate()
@@ -97,71 +70,62 @@ namespace Battle.Unit
                 unitCollider = GetComponentInChildren<Collider2D>();
         }
 
+        public void SwapSpriteToward(float targetDirection)
+        {
+            if (targetDirection > 0)
+                characterSprite.flipX = false;
+            else if (targetDirection < 0) characterSprite.flipX = true;
+        }
+
+        public void WaitingInPlace()
+        {
+            InputHorizontalVelocity(0);
+        }
+
+        public void InputHorizontalVelocity(float horizontalVelocity)
+        {
+            _horizontalVelocity = horizontalVelocity;
+        }
+
+        public void Attack()
+        {
+            _currentAttackStep++;
+
+            // Loop back to one after max step attack
+            if (_currentAttackStep > attackMaxStep)
+                _currentAttackStep = 1;
+
+            // Call one of three attack animations "Attack1", "Attack2", "Attack3"
+            unitAnimator.SetTrigger($"Attack{_currentAttackStep}");
+        }
+
+        public void ResetAttackCombo()
+        {
+            _currentAttackStep = 1;
+        }
+
+        protected virtual void EnterMove()
+        {
+            unitAnimator.SetInteger(AnimStateHash, 1);
+        }
+
+        protected virtual void EnterIdle()
+        {
+            unitAnimator.SetInteger(AnimStateHash, 0);
+        }
 
         public virtual void Hurt(int damage)
         {
             // unitAnimator.SetTrigger("Hurt");
         }
 
-        public void SetData(UnitData value)
-        {
-            Data = value;
-            _moveSpeed = CalculateUtil.ConvertSpeed(Data.MoveSpeed);
-            _attackInterval = CalculateUtil.ConvertAttackInterval(Data.AttackSpeed);
-        }
-
-        public virtual bool CanAttack()
-        {
-            return _timeSinceAttack > _attackInterval;
-        }
-
-        public void Attack()
-        {
-            if (!CanAttack())
-                return;
-
-            _currentAttackStep++;
-
-            // Loop back to one after third attack
-            if (_currentAttackStep > 3)
-                _currentAttackStep = 1;
-
-            // Reset Attack combo if time since last attack is too large
-            if (_timeSinceAttack > 1.0f)
-                _currentAttackStep = 1;
-
-            // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-            unitAnimator.SetTrigger("Attack" + _currentAttackStep);
-
-            // Reset timer
-            _timeSinceAttack = 0.0f;
-        }
-
-        public void Death()
+        public virtual void Death()
         {
             gameObject.layer = LayerMask.NameToLayer("Corpse");
-            unitAnimator.SetBool("noBlood", noBlood);
-            unitAnimator.SetTrigger("Death");
+            unitAnimator.SetBool(NoBloodHash, noBlood);
+            unitAnimator.SetTrigger(DeathHash);
 
             Destroy(gameObject, 1.0f);
-        }
-
-        public void WaitingInPlace() => InputHorizontal(0);
-
-        public void InputHorizontal(float horizontal)
-        {
-            // _inputHorizontal = horizontal;
-            _nextInputHorizontal = horizontal;
-        }
-
-        protected virtual void EnterMove()
-        {
-            unitAnimator.SetInteger("AnimState", 1);
-        }
-
-        protected virtual void EnterIdle()
-        {
-            unitAnimator.SetInteger("AnimState", 0);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Battle.Shared;
 using StateManagement;
 using UnityEngine;
+using static Battle.Shared.CalculateUtil;
 
 namespace Battle.Unit.StateManagement.States
 {
@@ -18,7 +19,7 @@ namespace Battle.Unit.StateManagement.States
 
             Move(direction);
         }
-        
+
         protected Vector2 GetMoveDirection()
         {
             Vector2 result = Context.CurrentTarget.position - Context.UnitAgent.transform.position;
@@ -44,9 +45,8 @@ namespace Battle.Unit.StateManagement.States
         protected void Move(Vector2 direction)
         {
             float horizontal = direction.x > 0 ? 1 : -1;
-            Context.UnitAgent.InputHorizontal(horizontal);
+            float worldDistance = ConvertToWorldDistance(Context.UnitEntity.MoveSpeed);
+            Context.UnitAgent.InputHorizontalVelocity(horizontal * worldDistance);
         }
-
-
     }
 }

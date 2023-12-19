@@ -22,11 +22,11 @@ namespace Battle.Unit.StateManagement
 
             AddTransition<CombatState, AttackState>(TargetInAttackRange);
             AddTransition<CombatState, IdleState>(NoAttackTarget);
-            
+
             AddTransition<AttackState, CombatState>(TargetOutOfAttackRange);
 
             AddTransition<AnyState, DeathState>(IsDead);
-            
+
             Enter<IdleState>();
         }
 
@@ -39,7 +39,7 @@ namespace Battle.Unit.StateManagement
         {
             return context.EnemyScanner.Target != null;
         }
-        
+
         private static bool NoAttackTarget(UnitBehaviourContext context)
         {
             return context.EnemyScanner.Target == null;
@@ -56,7 +56,7 @@ namespace Battle.Unit.StateManagement
             if (currentTarget == null)
                 return false;
 
-            return TargetInRange(context, context.UnitOriginalData.AttackRange);
+            return TargetInRange(context, context.UnitEntity.AttackRange);
         }
 
         private static bool TargetInRange(UnitBehaviourContext context, int checkRange)
@@ -65,14 +65,14 @@ namespace Battle.Unit.StateManagement
             UnitAgent unitAgent = context.UnitAgent;
 
             Vector2 toTargetFlat = currentTarget.position - unitAgent.transform.position;
-            float distance = CalculateUtil.ConvertDistance(checkRange);
+            float distance = CalculateUtil.ConvertToWorldDistance(checkRange);
 
             return toTargetFlat.sqrMagnitude <= distance * distance;
         }
 
         private static bool IsDead(UnitBehaviourContext context)
         {
-            return context.IsDead;
+            return context.UnitEntity.IsDead;
         }
     }
 }

@@ -5,19 +5,16 @@ namespace Battle.Unit.StateManagement
 {
     public class UnitBehaviourContext
     {
-        public UnitAgent UnitAgent;
-
-        public IReadonlyUnitData UnitOriginalData;
-        // public UnitEntity UnitEntity;
-
-
-        public Transform MarchTarget;
         public Transform CurrentTarget;
 
         public CircleTargetScanner EnemyScanner;
         public RectTargetScanner FriendScanner;
 
-        public bool IsDead;
+        public Transform MarchTarget;
+        public UnitAgent UnitAgent;
+        public UnitEntity UnitEntity;
+
+        public IReadonlyUnitData UnitOriginalData;
 
         public void ScanEnemy()
         {

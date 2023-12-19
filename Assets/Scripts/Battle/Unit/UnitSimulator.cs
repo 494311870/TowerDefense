@@ -10,24 +10,19 @@ namespace Battle.Unit
     public class UnitSimulator : MonoBehaviour
     {
         public UnitConfig unitConfig;
-
         public UnitAgent unitAgent;
 
-        private UnitConfig _currentConfig;
+        private UnitAgent _currentUnitAgent;
 
         private void Update()
         {
             if (!unitConfig || !unitAgent)
                 return;
 
-            if (_currentConfig != unitConfig)
+            if (_currentUnitAgent != unitAgent)
             {
-                _currentConfig = unitConfig;
-                ReloadConfig();
-            }
-            else if (unitAgent.DataInvalid)
-            {
-                ReloadConfig();
+                _currentUnitAgent = unitAgent;
+                ResetAgent();
             }
         }
 
@@ -37,13 +32,12 @@ namespace Battle.Unit
                 return;
 
             Gizmos.color = new Color(1, 0.5f, 0, 0.5f);
-            float attackRange = CalculateUtil.ConvertDistance(unitConfig.unitData.AttackRange);
-            Gizmos.DrawSphere(unitAgent.Center, attackRange);
+            float distance = CalculateUtil.ConvertToWorldDistance(unitConfig.unitData.AttackRange);
+            Gizmos.DrawSphere(unitAgent.Center, distance);
         }
 
-        private void ReloadConfig()
+        private void ResetAgent()
         {
-            unitAgent.SetData(unitConfig.unitData);
             unitAgent.unitRigidbody.isKinematic = true;
             unitAgent.unitRigidbody.velocity = Vector2.zero;
         }

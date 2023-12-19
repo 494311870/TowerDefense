@@ -1,6 +1,5 @@
 ﻿#region
 
-using System;
 using Battle.Shared;
 using Battle.Unit.StateManagement;
 using StateManagement;
@@ -14,9 +13,6 @@ namespace Battle.Unit
     {
         public UnitAgent agent;
 
-        private int _currentHp;
-        private bool _isDead;
-
         private StateMachine<UnitBehaviourContext> _stateMachine;
         private UnitBehaviourContext _context;
 
@@ -25,6 +21,7 @@ namespace Battle.Unit
             _context = new UnitBehaviourContext()
             {
                 UnitAgent = agent,
+                UnitEntity = new UnitEntity(),
                 EnemyScanner = new CircleTargetScanner(),
                 FriendScanner = new RectTargetScanner(),
             };
@@ -38,14 +35,12 @@ namespace Battle.Unit
 
         public void Hurt(int damage)
         {
-            if (_isDead)
+            if (_context.UnitEntity.IsDead)
                 return;
 
             agent.Hurt(damage);
 
-            _currentHp -= Mathf.Max(0, damage);
-            if (_currentHp <= 0)
-                Death();
+            _context.UnitEntity.Hurt(damage);
         }
 
         /// <summary>
@@ -59,34 +54,26 @@ namespace Battle.Unit
                 return;
 
             if (target.TryGetComponent(out IAttackTarget attackTarget))
-                attackTarget.Hurt(_context.UnitOriginalData.AttackDamage);
+                attackTarget.Hurt(_context.UnitEntity.AttackDamage);
         }
 
-        public void SetData(UnitData unitData)
+        public void SetData(IReadonlyUnitData unitData)
         {
             _context.UnitOriginalData = unitData;
-            _currentHp = unitData.Health;
+            _context.UnitEntity.Load(unitData);
 
             CircleTargetScanner enemyScanner = _context.EnemyScanner;
             RectTargetScanner friendScanner = _context.FriendScanner;
-            
-            enemyScanner.ScanRange = CalculateUtil.ConvertDistance(unitData.ThreatRange);
-            friendScanner.ScanWidth = CalculateUtil.ConvertDistance(unitData.FriendSpace);
+
+            enemyScanner.ScanRange = CalculateUtil.ConvertToWorldDistance(unitData.ThreatRange);
+            friendScanner.ScanWidth = CalculateUtil.ConvertToWorldDistance(unitData.FriendSpace);
             friendScanner.ScanHeight = agent.unitCollider.bounds.size.y;
             friendScanner.AddIgnored(agent.unitCollider);
-
-            agent.SetData(unitData);
         }
 
         public void SetMoveTarget(Transform target)
         {
             _context.MarchTarget = target;
-        }
-
-        public void Death()
-        {
-            _isDead = true;
-            agent.Death();
         }
 
         public void SetEnemyLayer(LayerMask layerMask)
