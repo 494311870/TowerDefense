@@ -9,8 +9,10 @@ namespace Battle.Unit.StateManagement.States
     {
         public override void Update(float deltaTime)
         {
-            Vector2 direction = GetMoveDirection();
+            if (IsStationed())
+                return;
 
+            Vector2 direction = GetMoveDirection();
             if (HasAnyFriendlyBlock(direction))
             {
                 WaitingInPlace();
@@ -18,6 +20,11 @@ namespace Battle.Unit.StateManagement.States
             }
 
             Move(direction);
+        }
+
+        private bool IsStationed()
+        {
+            return Context.UnitEntity.IsStationed;
         }
 
         protected Vector2 GetMoveDirection()

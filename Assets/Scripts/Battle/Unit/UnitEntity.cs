@@ -11,6 +11,7 @@ namespace Battle.Unit
         public int AttackDamage { get; private set; }
 
         public bool IsDead => Health <= 0;
+        public bool IsStationed => MoveSpeed <= 0;
 
         public void Load(IReadonlyUnitData unitData)
         {
