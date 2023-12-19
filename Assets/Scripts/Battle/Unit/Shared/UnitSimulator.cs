@@ -5,7 +5,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Battle.Unit
+namespace Battle.Unit.Shared
 {
     public class UnitSimulator : MonoBehaviour
     {

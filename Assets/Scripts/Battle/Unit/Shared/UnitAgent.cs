@@ -4,7 +4,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Battle.Unit
+namespace Battle.Unit.Shared
 {
     public abstract class UnitAgent : MonoBehaviour
     {
@@ -21,9 +21,25 @@ namespace Battle.Unit
 
         private int _currentAttackStep;
         private float _delayToIdle;
+        private bool _flip;
         private float _horizontalVelocity;
 
         public Vector2 Center => (Vector2)transform.position + unitCollider.offset;
+
+        public Vector2 MoveDirection => transform.right;
+
+        public bool Flip
+        {
+            get => _flip;
+            set
+            {
+                if (_flip == value)
+                    return;
+
+                _flip = value;
+                transform.localEulerAngles = _flip ? new Vector3(0, 180, 0) : new Vector3(0, 0, 0);
+            }
+        }
 
         // Update is called once per frame
         private void Update()
@@ -31,7 +47,7 @@ namespace Battle.Unit
             // -- Handle input and movement --
             float velocityX = _horizontalVelocity;
             // Swap direction of sprite depending on walk direction
-            SwapSpriteToward(velocityX);
+            SwapFlip(velocityX);
             //Run
             if (Mathf.Abs(velocityX) > Mathf.Epsilon)
             {
@@ -70,11 +86,12 @@ namespace Battle.Unit
                 unitCollider = GetComponentInChildren<Collider2D>();
         }
 
-        public void SwapSpriteToward(float targetDirection)
+        private void SwapFlip(float velocityX)
         {
-            if (targetDirection > 0)
-                characterSprite.flipX = false;
-            else if (targetDirection < 0) characterSprite.flipX = true;
+            if (velocityX > 0)
+                Flip = true;
+            else if (velocityX < 0)
+                Flip = false;
         }
 
         public void WaitingInPlace()
@@ -126,6 +143,12 @@ namespace Battle.Unit
             unitAnimator.SetTrigger(DeathHash);
 
             Destroy(gameObject, 1.0f);
+        }
+
+        public void LookAt(Vector3 position)
+        {
+            Vector3 direction = position - transform.position;
+            SwapFlip(direction.x);
         }
     }
 }

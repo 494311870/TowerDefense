@@ -1,13 +1,14 @@
 ﻿#region
 
 using Battle.Unit;
+using Battle.Unit.Shared;
 using UnityEngine;
 
 #endregion
 
 namespace Battle.Card
 {
-    [CreateAssetMenu(menuName = "Battle/Config/Card")]
+    [CreateAssetMenu(menuName = "Battle/Card/Config")]
     public class CardConfig : ScriptableObject
     {
         [SerializeField] private UnitConfig unitConfig;

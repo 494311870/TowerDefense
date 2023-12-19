@@ -1,7 +1,4 @@
-﻿using StateManagement;
-using UnityEngine;
-
-namespace Battle.Unit.StateManagement.States
+﻿namespace Battle.Unit.Shared.StateManagement.States
 {
     public class MarchState : MoveState
     {

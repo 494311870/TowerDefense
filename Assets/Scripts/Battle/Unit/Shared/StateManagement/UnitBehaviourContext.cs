@@ -1,7 +1,7 @@
 ﻿using Battle.Shared;
 using UnityEngine;
 
-namespace Battle.Unit.StateManagement
+namespace Battle.Unit.Shared.StateManagement
 {
     public class UnitBehaviourContext
     {

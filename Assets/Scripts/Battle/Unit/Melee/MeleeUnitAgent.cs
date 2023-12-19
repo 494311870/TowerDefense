@@ -1,6 +1,8 @@
-﻿namespace Battle.Unit
+﻿using Battle.Unit.Shared;
+
+namespace Battle.Unit.Melee
 {
-    public class GroundUnitAgent : UnitAgent
+    public class MeleeUnitAgent : UnitAgent
     {
         private void Start()
         {

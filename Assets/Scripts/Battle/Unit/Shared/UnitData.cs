@@ -5,7 +5,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Battle.Unit
+namespace Battle.Unit.Shared
 {
     [Serializable]
     public class UnitData : IReadonlyUnitData
@@ -59,16 +59,5 @@ namespace Battle.Unit
             get => friendSpace;
             set => friendSpace = value;
         }
-    }
-
-    public interface IReadonlyUnitData
-    {
-        int Health { get; }
-        int MoveSpeed { get; }
-        int ThreatRange { get; }
-        int AttackDamage { get; }
-        int AttackSpeed { get; }
-        int AttackRange { get; }
-        int FriendSpace { get; }
     }
 }

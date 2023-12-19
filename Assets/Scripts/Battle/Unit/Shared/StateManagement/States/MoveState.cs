@@ -3,7 +3,7 @@ using StateManagement;
 using UnityEngine;
 using static Battle.Shared.CalculateUtil;
 
-namespace Battle.Unit.StateManagement.States
+namespace Battle.Unit.Shared.StateManagement.States
 {
     public abstract class MoveState : State<UnitBehaviourContext>
     {

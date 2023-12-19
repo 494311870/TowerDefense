@@ -4,9 +4,9 @@ using UnityEngine;
 
 #endregion
 
-namespace Battle.Unit
+namespace Battle.Unit.Shared
 {
-    [CreateAssetMenu(menuName = "Battle/Config/Unit")]
+    [CreateAssetMenu(menuName = "Battle/Unit/Config")]
     public class UnitConfig : ScriptableObject
     {
         public GameObject prefab;

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Battle.Unit.StateManagement.States
+﻿namespace Battle.Unit.Shared.StateManagement.States
 {
     public class CombatState : MoveState
     {

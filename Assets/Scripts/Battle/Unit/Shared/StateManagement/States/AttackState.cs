@@ -2,7 +2,7 @@
 using UnityEngine;
 using static Battle.Shared.CalculateUtil;
 
-namespace Battle.Unit.StateManagement.States
+namespace Battle.Unit.Shared.StateManagement.States
 {
     public class AttackState : State<UnitBehaviourContext>
     {
@@ -32,8 +32,8 @@ namespace Battle.Unit.StateManagement.States
         {
             Collider2D target = Context.EnemyScanner.Target;
             UnitAgent agent = Context.UnitAgent;
-            Vector3 direction = target.transform.position - agent.transform.position;
-            agent.SwapSpriteToward(direction.x);
+            
+            agent.LookAt(target.transform.position);
         }
 
         private void TryAttack()

@@ -1,6 +1,7 @@
 #region
 
 using Battle.Unit;
+using Battle.Unit.Shared;
 using UnityEngine;
 
 #endregion
@@ -29,7 +30,7 @@ namespace Battle.Spawn
             instance.layer = LayerMask.NameToLayer(friendLayer);
             if (instance.TryGetComponent(out UnitBehaviour unitBehaviour))
             {
-                unitBehaviour.SetData(unitConfig.unitData);
+                unitBehaviour.ProvideData(unitConfig.unitData);
                 unitBehaviour.SetMoveTarget(moveTarget);
                 unitBehaviour.SetEnemyLayer(LayerMask.GetMask(enemyLayer));
                 unitBehaviour.SetFriendLayer(LayerMask.GetMask(friendLayer));

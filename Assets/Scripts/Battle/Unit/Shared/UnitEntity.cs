@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Battle.Unit
+namespace Battle.Unit.Shared
 {
     public class UnitEntity
     {

@@ -1,9 +1,9 @@
 ﻿using Battle.Shared;
-using Battle.Unit.StateManagement.States;
+using Battle.Unit.Shared.StateManagement.States;
 using StateManagement;
 using UnityEngine;
 
-namespace Battle.Unit.StateManagement
+namespace Battle.Unit.Shared.StateManagement
 {
     public class UnitBehaviourStateMachine : StateMachine<UnitBehaviourContext>
     {
