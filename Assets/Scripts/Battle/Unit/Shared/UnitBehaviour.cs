@@ -4,6 +4,7 @@ using Battle.Shared;
 using Battle.Unit.Shared.StateManagement;
 using StateManagement;
 using UnityEngine;
+using static Battle.Shared.CalculateUtil;
 
 #endregion
 
@@ -15,6 +16,7 @@ namespace Battle.Unit.Shared
 
         private StateMachine<UnitContext> _stateMachine;
         protected UnitContext Context { get; private set; }
+        public BattleSession BattleSession { get; set; }
 
         private void Awake()
         {
@@ -56,8 +58,8 @@ namespace Battle.Unit.Shared
             CircleTargetScanner enemyScanner = Context.EnemyScanner;
             RectTargetScanner friendScanner = Context.FriendScanner;
 
-            enemyScanner.ScanRange = CalculateUtil.ConvertToWorldDistance(unitData.ThreatRange);
-            friendScanner.ScanWidth = CalculateUtil.ConvertToWorldDistance(unitData.FriendSpace);
+            enemyScanner.ScanRange = ConvertToWorldDistance(unitData.ThreatRange);
+            friendScanner.ScanWidth = ConvertToWorldDistance(unitData.FriendSpace);
             friendScanner.ScanHeight = agent.unitCollider.bounds.size.y;
             friendScanner.AddIgnored(agent.unitCollider);
 
@@ -92,5 +94,21 @@ namespace Battle.Unit.Shared
         }
 
         protected abstract void AttackDetection();
+
+        public void ProvideSession(BattleSession session)
+        {
+            BattleSession = session;
+            Context.BattleSession = session;
+            OnProvideSession(session);
+        }
+
+        protected virtual void OnProvideSession(BattleSession session)
+        {
+        }
+
+        public void ResetState()
+        {
+            _stateMachine.ResetState();
+        }
     }
 }

@@ -6,15 +6,13 @@ namespace Battle.Unit.Shared
     public class UnitContext
     {
         public Transform CurrentTarget;
-
         public CircleTargetScanner EnemyScanner;
         public RectTargetScanner FriendScanner;
-
         public Transform MarchTarget;
         public UnitAgent UnitAgent;
         public UnitEntity UnitEntity;
-
         public IReadonlyUnitData UnitOriginalData;
+        public BattleSession BattleSession { get; set; }
 
         public void ScanEnemy()
         {

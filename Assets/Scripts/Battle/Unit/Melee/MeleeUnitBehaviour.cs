@@ -13,14 +13,9 @@ namespace Battle.Unit.Melee
             _attackScanner = new CircleTargetScanner();
         }
 
-        protected override void OnProvideData(IReadonlyUnitData unitData)
-        {
-            _attackScanner.ScanRange = unitData.AttackRange;
-        }
-
-
         protected override void AttackDetection()
         {
+            _attackScanner.ScanRange = Context.UnitEntity.AttackRange;
             _attackScanner.Scan(agent.Center);
 
             Collider2D target = _attackScanner.Target;

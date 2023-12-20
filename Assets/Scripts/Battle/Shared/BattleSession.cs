@@ -11,6 +11,8 @@ namespace Battle.Shared
     [CreateAssetMenu(fileName = "BattleSession", menuName = "Battle/BattleSession")]
     public class BattleSession : ScriptableObject
     {
+        public Transform ProjectileContainer { get; set; }
+        
         private Dictionary<int, Spawner> _spawnerMap;
 
         public void ProvideSpawner(Spawner spawner, int ownerId)

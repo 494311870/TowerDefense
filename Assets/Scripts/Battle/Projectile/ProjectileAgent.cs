@@ -6,6 +6,9 @@ namespace Battle.Projectile
     public class ProjectileAgent : MonoBehaviour
     {
         private Vector3 _velocity;
+        public Vector2 Center => transform.position;
+
+        public event Action DeathEvent;
 
         private void Update()
         {
@@ -24,7 +27,7 @@ namespace Battle.Projectile
 
         public void Death()
         {
-            throw new NotImplementedException();
+            DeathEvent?.Invoke();
         }
     }
 }

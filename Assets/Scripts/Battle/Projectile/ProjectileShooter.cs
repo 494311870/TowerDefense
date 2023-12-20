@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Battle.Projectile
@@ -9,40 +7,46 @@ namespace Battle.Projectile
     {
         public ProjectileConfig projectileConfig;
 
+        private int _attackDamage;
         private Transform _container;
-        private Queue<ProjectileBehaviour> _projectilePool;
+        private ObjectPool<ProjectileBehaviour> _projectilePool;
 
         private void Awake()
         {
-            _projectilePool = new Queue<ProjectileBehaviour>();
+            _projectilePool = new ObjectPool<ProjectileBehaviour>(CreatePooledItem, OnTakeFromPool, OnReturnedToPool,
+                OnDestroyPoolObject);
         }
 
-        public void ProvideContainer(Transform container)
+        private ProjectileBehaviour CreatePooledItem()
         {
-            _container = container;
-        }
-
-        public void Shoot(Vector2 from, Vector2 to)
-        {
-            if (!_projectilePool.TryDequeue(out ProjectileBehaviour projectileBehaviour))
+            GameObject instance = Instantiate(projectileConfig.prefab, _container);
+            if (instance.TryGetComponent(out ProjectileBehaviour projectileBehaviour))
             {
-                GameObject instance = Instantiate(projectileConfig.prefab, _container);
-                if (instance.TryGetComponent(out projectileBehaviour))
-                {
-                    projectileBehaviour.OnRecycle = OnProjectileRecycle;
-                }
+                projectileBehaviour.OnRecycle = OnProjectileRecycle;
             }
-            
-            projectileBehaviour.gameObject.SetActive(true);
-            projectileBehaviour.SetStartPosition(from);
-            projectileBehaviour.SetEndPosition(to);
-            projectileBehaviour.ResetState();
+
+            return projectileBehaviour;
         }
 
-        private void OnProjectileRecycle(ProjectileBehaviour projectile)
+        private void OnProjectileRecycle(ProjectileBehaviour behaviour)
         {
-            _projectilePool.Enqueue(projectile);
-            projectile.gameObject.SetActive(false);
+            _projectilePool.Release(behaviour);
+        }
+
+        private static void OnDestroyPoolObject(ProjectileBehaviour behaviour)
+        {
+            Destroy(behaviour.gameObject);
+        }
+
+        private static void OnReturnedToPool(ProjectileBehaviour behaviour)
+        {
+            behaviour.gameObject.SetActive(false);
+        }
+
+        private static void OnTakeFromPool(ProjectileBehaviour behaviour)
+        {
+            ResetTransform(behaviour.transform);
+            behaviour.gameObject.SetActive(true);
         }
 
         private static void ResetTransform(Transform transform)
@@ -50,6 +54,27 @@ namespace Battle.Projectile
             transform.localPosition = Vector3.zero;
             transform.rotation = Quaternion.identity;
             transform.localScale = Vector3.one;
+        }
+
+        public void ProvideContainer(Transform container)
+        {
+            _container = container;
+        }
+
+        public void SetAttackDamage(int attackDamage)
+        {
+            _attackDamage = attackDamage;
+        }
+
+        public void Shoot(Vector2 from, Vector2 to)
+        {
+            ProjectileBehaviour projectileBehaviour = _projectilePool.Get();
+
+            projectileBehaviour.ProvideData(projectileConfig.projectileData);
+            projectileBehaviour.SetAttackDamage(_attackDamage);
+            projectileBehaviour.SetStartPosition(from);
+            projectileBehaviour.SetEndPosition(to);
+            projectileBehaviour.ResetState();
         }
     }
 }

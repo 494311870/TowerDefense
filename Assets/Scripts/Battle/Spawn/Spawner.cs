@@ -1,5 +1,7 @@
 #region
 
+using System;
+using Battle.Shared;
 using Battle.Unit;
 using Battle.Unit.Shared;
 using UnityEngine;
@@ -10,11 +12,13 @@ namespace Battle.Spawn
 {
     public class Spawner : MonoBehaviour
     {
+        public BattleSession battleSession;
         public Transform moveTarget;
         public Transform container;
 
         public string friendLayer;
         public string enemyLayer;
+
 
         public void Spawn(UnitConfig unitConfig)
         {
@@ -30,10 +34,12 @@ namespace Battle.Spawn
             instance.layer = LayerMask.NameToLayer(friendLayer);
             if (instance.TryGetComponent(out UnitBehaviour unitBehaviour))
             {
+                unitBehaviour.ProvideSession(battleSession);
                 unitBehaviour.ProvideData(unitConfig.unitData);
                 unitBehaviour.SetMoveTarget(moveTarget);
                 unitBehaviour.SetEnemyLayer(LayerMask.GetMask(enemyLayer));
                 unitBehaviour.SetFriendLayer(LayerMask.GetMask(friendLayer));
+                unitBehaviour.ResetState();
             }
         }
 
