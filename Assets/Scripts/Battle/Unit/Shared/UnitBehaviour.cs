@@ -13,19 +13,19 @@ namespace Battle.Unit.Shared
     {
         public UnitAgent agent;
 
-        private StateMachine<UnitBehaviourContext> _stateMachine;
-        protected UnitBehaviourContext Context { get; private set; }
+        private StateMachine<UnitContext> _stateMachine;
+        protected UnitContext Context { get; private set; }
 
         private void Awake()
         {
-            Context = new UnitBehaviourContext
+            Context = new UnitContext
             {
                 UnitAgent = agent,
                 UnitEntity = new UnitEntity(),
                 EnemyScanner = new CircleTargetScanner(),
                 FriendScanner = new RectTargetScanner()
             };
-            _stateMachine = new UnitBehaviourStateMachine(Context);
+            _stateMachine = new UnitStateMachine(Context);
             OnInit();
         }
 

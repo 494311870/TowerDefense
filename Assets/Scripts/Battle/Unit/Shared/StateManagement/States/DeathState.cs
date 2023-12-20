@@ -2,7 +2,7 @@
 
 namespace Battle.Unit.Shared.StateManagement.States
 {
-    public class DeathState : State<UnitBehaviourContext>
+    public class DeathState : State<UnitContext>
     {
         public override void Enter()
         {

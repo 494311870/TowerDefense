@@ -1,9 +1,9 @@
 ﻿using Battle.Shared;
 using UnityEngine;
 
-namespace Battle.Unit.Shared.StateManagement
+namespace Battle.Unit.Shared
 {
-    public class UnitBehaviourContext
+    public class UnitContext
     {
         public Transform CurrentTarget;
 
@@ -19,6 +19,11 @@ namespace Battle.Unit.Shared.StateManagement
         public void ScanEnemy()
         {
             EnemyScanner.Scan(UnitAgent.Center);
+        }
+
+        public void SelectEnemyAsTarget()
+        {
+            this.CurrentTarget = this.EnemyScanner.Target.transform;
         }
     }
 }

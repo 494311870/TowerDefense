@@ -5,7 +5,15 @@
         public override void Enter()
         {
             base.Enter();
-            Context.CurrentTarget = Context.EnemyScanner.Target.transform;
+            Context.SelectEnemyAsTarget();
+        }
+
+        public override void Update(float deltaTime)
+        {
+            Context.ScanEnemy();
+            Context.SelectEnemyAsTarget();
+            
+            base.Update(deltaTime);
         }
     }
 }

@@ -5,7 +5,7 @@ using static Battle.Shared.CalculateUtil;
 
 namespace Battle.Unit.Shared.StateManagement.States
 {
-    public abstract class MoveState : State<UnitBehaviourContext>
+    public abstract class MoveState : State<UnitContext>
     {
         public override void Update(float deltaTime)
         {

@@ -4,7 +4,7 @@ using static Battle.Shared.CalculateUtil;
 
 namespace Battle.Unit.Shared.StateManagement.States
 {
-    public class AttackState : State<UnitBehaviourContext>
+    public class AttackState : State<UnitContext>
     {
         private float _attackCoolDown;
 

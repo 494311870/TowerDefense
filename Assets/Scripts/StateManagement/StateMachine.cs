@@ -17,6 +17,7 @@ namespace StateManagement
         private readonly Dictionary<Type, IState> _stateMap = new();
         private readonly Dictionary<IState, List<Transition<T>>> _transitionMap = new();
 
+        private IState _rootState;
         private IState _currentState;
         private IState _jumpToState;
 
@@ -37,6 +38,15 @@ namespace StateManagement
         {
             state.Context = _context;
             _stateMap.Add(state.GetType(), state);
+        }
+
+        public void SetRootState<TState>()
+        {
+            Type stateType = typeof(TState);
+            if (!_stateMap.TryGetValue(stateType, out IState state))
+                return;
+            
+            _rootState = state;            
         }
 
         public void AddTransition<TFromState, TToState>(Condition<T> condition)
@@ -123,6 +133,12 @@ namespace StateManagement
                 return;
 
             _jumpToState = state;
+        }
+
+        public void ResetState()
+        {
+            _currentState = null;
+            Enter(_rootState);
         }
     }
 }

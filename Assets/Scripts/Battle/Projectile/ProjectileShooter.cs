@@ -22,7 +22,7 @@ namespace Battle.Projectile
             _container = container;
         }
 
-        public void Shoot(Vector3 position)
+        public void Shoot(Vector2 from, Vector2 to)
         {
             if (!_projectilePool.TryDequeue(out ProjectileBehaviour projectileBehaviour))
             {
@@ -32,15 +32,17 @@ namespace Battle.Projectile
                     projectileBehaviour.OnRecycle = OnProjectileRecycle;
                 }
             }
-
-
-            projectileBehaviour.SetTarget(position);
-
+            
+            projectileBehaviour.gameObject.SetActive(true);
+            projectileBehaviour.SetStartPosition(from);
+            projectileBehaviour.SetEndPosition(to);
+            projectileBehaviour.ResetState();
         }
 
         private void OnProjectileRecycle(ProjectileBehaviour projectile)
         {
             _projectilePool.Enqueue(projectile);
+            projectile.gameObject.SetActive(false);
         }
 
         private static void ResetTransform(Transform transform)

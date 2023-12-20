@@ -2,7 +2,7 @@
 
 namespace Battle.Unit.Shared.StateManagement.States
 {
-    public class IdleState : State<UnitBehaviourContext>
+    public class IdleState : State<UnitContext>
     {
         public override void Enter()
         {

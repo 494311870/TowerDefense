@@ -5,15 +5,17 @@ using UnityEngine;
 
 namespace Battle.Unit.Shared.StateManagement
 {
-    public class UnitBehaviourStateMachine : StateMachine<UnitBehaviourContext>
+    public class UnitStateMachine : StateMachine<UnitContext>
     {
-        public UnitBehaviourStateMachine(UnitBehaviourContext context) : base(context)
+        public UnitStateMachine(UnitContext context) : base(context)
         {
             AddState<IdleState>();
             AddState<MarchState>();
             AddState<CombatState>();
             AddState<AttackState>();
             AddState<DeathState>();
+            
+            SetRootState<IdleState>();
 
             AddTransition<IdleState, CombatState>(HasAttackTarget);
             AddTransition<IdleState, MarchState>(HasMarchTarget);
@@ -26,31 +28,29 @@ namespace Battle.Unit.Shared.StateManagement
             AddTransition<AttackState, CombatState>(TargetOutOfAttackRange);
 
             AddTransition<AnyState, DeathState>(IsDead);
-
-            Enter<IdleState>();
         }
 
-        private static bool HasMarchTarget(UnitBehaviourContext context)
+        private static bool HasMarchTarget(UnitContext context)
         {
             return context.MarchTarget != null;
         }
 
-        private static bool HasAttackTarget(UnitBehaviourContext context)
+        private static bool HasAttackTarget(UnitContext context)
         {
             return context.EnemyScanner.Target != null;
         }
 
-        private static bool NoAttackTarget(UnitBehaviourContext context)
+        private static bool NoAttackTarget(UnitContext context)
         {
             return context.EnemyScanner.Target == null;
         }
 
-        private static bool TargetOutOfAttackRange(UnitBehaviourContext context)
+        private static bool TargetOutOfAttackRange(UnitContext context)
         {
             return !TargetInAttackRange(context);
         }
 
-        private static bool TargetInAttackRange(UnitBehaviourContext context)
+        private static bool TargetInAttackRange(UnitContext context)
         {
             Transform currentTarget = context.CurrentTarget;
             if (currentTarget == null)
@@ -59,7 +59,7 @@ namespace Battle.Unit.Shared.StateManagement
             return TargetInRange(context, context.UnitEntity.AttackRange);
         }
 
-        private static bool TargetInRange(UnitBehaviourContext context, int checkRange)
+        private static bool TargetInRange(UnitContext context, int checkRange)
         {
             Transform currentTarget = context.CurrentTarget;
             UnitAgent unitAgent = context.UnitAgent;
@@ -70,7 +70,7 @@ namespace Battle.Unit.Shared.StateManagement
             return toTargetFlat.sqrMagnitude <= distance * distance;
         }
 
-        private static bool IsDead(UnitBehaviourContext context)
+        private static bool IsDead(UnitContext context)
         {
             return context.UnitEntity.IsDead;
         }
