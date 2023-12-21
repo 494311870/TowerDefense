@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c7210a850f4efe488f8f8257c7e1170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleSession: {fileID: 11400000, guid: f237fe048d737e04b8c1853081e3fab6, type: 2}
   moveTarget: {fileID: 1799761911}
   container: {fileID: 1163110698}
   friendLayer: UnitA
@@ -417,12 +418,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb6df98eb924d8f9562f12a3018aa0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleSession: {fileID: 11400000, guid: f237fe048d737e04b8c1853081e3fab6, type: 2}
   moveTarget: {fileID: 1163110698}
   container: {fileID: 1799761911}
   friendLayer: UnitB
   enemyLayer: UnitA
   spawnDelay: 1
-  spawnInterval: 200
+  spawnInterval: 3
   unitConfig: {fileID: 11400000, guid: 493c90b5489a61c42835559c094334a0, type: 2}
 --- !u!1 &1976807833
 GameObject:

@@ -36,6 +36,8 @@ namespace Battle.Unit.Shared
             _stateMachine.Update(Time.fixedDeltaTime);
         }
 
+        public Vector2 Center => agent.Center;
+
         public void Hurt(int damage)
         {
             if (Context.UnitEntity.IsDead)
@@ -45,6 +47,7 @@ namespace Battle.Unit.Shared
 
             Context.UnitEntity.Hurt(damage);
         }
+
 
         protected virtual void OnInit()
         {
@@ -90,6 +93,7 @@ namespace Battle.Unit.Shared
         /// </summary>
         private void OnAttackAnimationEvent()
         {
+            Debug.Log("OnAttackAnimationEvent");
             AttackDetection();
         }
 

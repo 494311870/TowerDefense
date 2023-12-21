@@ -21,7 +21,8 @@ namespace Battle.Unit.Shared
 
         public void SelectEnemyAsTarget()
         {
-            this.CurrentTarget = this.EnemyScanner.Target.transform;
+            Collider2D target = this.EnemyScanner.Target;
+            this.CurrentTarget = target ? target.transform : null;
         }
     }
 }

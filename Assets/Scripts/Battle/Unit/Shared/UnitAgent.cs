@@ -89,9 +89,9 @@ namespace Battle.Unit.Shared
         private void SwapFlip(float velocityX)
         {
             if (velocityX > 0)
-                Flip = true;
-            else if (velocityX < 0)
                 Flip = false;
+            else if (velocityX < 0)
+                Flip = true;
         }
 
         public void WaitingInPlace()
@@ -134,6 +134,7 @@ namespace Battle.Unit.Shared
         public virtual void Hurt(int damage)
         {
             // unitAnimator.SetTrigger("Hurt");
+            Debug.Log($"Hurt  {this.name} {damage}");
         }
 
         public virtual void Death()

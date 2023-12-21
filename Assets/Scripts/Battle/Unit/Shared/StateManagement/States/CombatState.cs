@@ -10,10 +10,10 @@
 
         public override void Update(float deltaTime)
         {
+            base.Update(deltaTime);
+            
             Context.ScanEnemy();
             Context.SelectEnemyAsTarget();
-            
-            base.Update(deltaTime);
         }
     }
 }

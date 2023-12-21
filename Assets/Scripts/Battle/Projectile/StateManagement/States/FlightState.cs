@@ -9,7 +9,8 @@ namespace Battle.Projectile.StateManagement.States
         public override void Enter()
         {
             Vector2 direction = Context.EndPosition - Context.StartPosition;
-            Vector2 velocity = direction.normalized * Context.ProjectileEntity.MoveSpeed;
+            float worldDistance = CalculateUtil.ConvertToWorldDistance(Context.ProjectileEntity.MoveSpeed);
+            Vector2 velocity = direction.normalized * worldDistance;
             Context.ProjectileAgent.InputVelocity(velocity);
         }
 

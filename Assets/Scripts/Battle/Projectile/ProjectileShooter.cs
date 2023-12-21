@@ -10,6 +10,12 @@ namespace Battle.Projectile
         private int _attackDamage;
         private Transform _container;
         private ObjectPool<ProjectileBehaviour> _projectilePool;
+        private LayerMask _attackLayerMask;
+
+        public void SetAttackLayerMask(LayerMask value)
+        {
+            _attackLayerMask = value;
+        }
 
         private void Awake()
         {
@@ -72,6 +78,7 @@ namespace Battle.Projectile
 
             projectileBehaviour.ProvideData(projectileConfig.projectileData);
             projectileBehaviour.SetAttackDamage(_attackDamage);
+            projectileBehaviour.SetAttackLayerMask(_attackLayerMask);
             projectileBehaviour.SetStartPosition(from);
             projectileBehaviour.SetEndPosition(to);
             projectileBehaviour.ResetState();

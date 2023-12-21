@@ -15,6 +15,9 @@ namespace Battle.Unit.Melee
 
         protected override void AttackDetection()
         {
+            Debug.Log("AttackDetection");
+
+            _attackScanner.LayerMask = Context.EnemyScanner.LayerMask;
             _attackScanner.ScanRange = Context.UnitEntity.AttackRange;
             _attackScanner.Scan(agent.Center);
 

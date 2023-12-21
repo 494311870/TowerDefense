@@ -74,5 +74,10 @@ namespace Battle.Projectile
         {
             _context.ProjectileEntity.AttackDamage = attackDamage;
         }
+
+        public void SetAttackLayerMask(LayerMask attackLayerMask)
+        {
+           _context.HitScanner.LayerMask = attackLayerMask;
+        }
     }
 }

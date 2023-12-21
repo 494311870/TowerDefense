@@ -16,6 +16,6 @@ MonoBehaviour:
   debugCardConfigs:
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
   - {fileID: 11400000, guid: ddbc9652545999243a2c9de6e1262cf0, type: 2}
-  - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
+  - {fileID: 11400000, guid: 0d113d52d3efc3647a845414a046925b, type: 2}
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}
   - {fileID: 11400000, guid: 4e6328fb9296d0c418c33d3d8e670554, type: 2}

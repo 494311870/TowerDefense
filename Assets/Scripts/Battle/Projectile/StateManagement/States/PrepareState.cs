@@ -8,6 +8,7 @@ namespace Battle.Projectile.StateManagement.States
         {
             Context.ProjectileEntity.RePrepare();
             Context.ProjectileAgent.WaitingInPlace();
+            Context.ProjectileAgent.transform.position = Context.StartPosition;
         }
 
         public override void Update(float deltaTime)
