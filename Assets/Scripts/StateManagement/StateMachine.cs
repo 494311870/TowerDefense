@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 #endregion
 
@@ -16,10 +15,10 @@ namespace StateManagement
 
         private readonly Dictionary<Type, IState> _stateMap = new();
         private readonly Dictionary<IState, List<Transition<T>>> _transitionMap = new();
-
-        private IState _rootState;
         private IState _currentState;
         private IState _jumpToState;
+
+        private IState _rootState;
 
         public StateMachine(T context)
         {
@@ -45,8 +44,8 @@ namespace StateManagement
             Type stateType = typeof(TState);
             if (!_stateMap.TryGetValue(stateType, out IState state))
                 return;
-            
-            _rootState = state;            
+
+            _rootState = state;
         }
 
         public void AddTransition<TFromState, TToState>(Condition<T> condition)
@@ -76,13 +75,16 @@ namespace StateManagement
             }
             else
             {
-                var transitions = new List<Transition<T>> {transition};
+                List<Transition<T>> transitions = new() { transition };
                 _transitionMap.Add(transition.From, transitions);
             }
         }
 
         public void Update(float deltaTime)
         {
+            if (_context == null)
+                return;
+
             if (_jumpToState != null)
             {
                 IState jumpTo = _jumpToState;
@@ -90,9 +92,9 @@ namespace StateManagement
                 Enter(jumpTo);
                 return;
             }
-            
+
             _currentState?.Update(deltaTime);
-            
+
             CheckTransitions();
         }
 
@@ -111,10 +113,7 @@ namespace StateManagement
             if (state == null)
                 return null;
 
-            if (!_transitionMap.TryGetValue(state, out List<Transition<T>> transitions))
-            {
-                return null;
-            }
+            if (!_transitionMap.TryGetValue(state, out List<Transition<T>> transitions)) return null;
 
             return transitions.FirstOrDefault(transition => transition.Statement(_context));
         }
@@ -138,7 +137,7 @@ namespace StateManagement
         public void ResetState()
         {
             _currentState = null;
-            Enter(_rootState);
+            _jumpToState = _rootState;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using StateManagement;
+﻿using Battle.Shared;
+using StateManagement;
 using UnityEngine;
 using static Battle.Shared.CalculateUtil;
 
@@ -30,9 +31,14 @@ namespace Battle.Unit.Shared.StateManagement.States
 
         private void LookAtTarget()
         {
-            Collider2D target = Context.EnemyScanner.Target;
+            CircleTargetScanner enemyScanner = Context.EnemyScanner;
+            // 这时候敌人可能已经不存在了
+            if (!enemyScanner.IsDetected)
+                return;
+
+            Collider2D target = enemyScanner.Target;
             UnitAgent agent = Context.UnitAgent;
-            
+
             agent.LookAt(target.transform.position);
         }
 

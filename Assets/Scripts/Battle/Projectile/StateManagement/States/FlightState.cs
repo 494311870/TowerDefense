@@ -22,9 +22,7 @@ namespace Battle.Projectile.StateManagement.States
             {
                 Context.IsConsumed = true;
                 if (hitScanner.Target.TryGetComponent(out IAttackTarget attackTarget))
-                {
                     attackTarget.Hurt(Context.ProjectileEntity.AttackDamage);
-                }
             }
         }
     }

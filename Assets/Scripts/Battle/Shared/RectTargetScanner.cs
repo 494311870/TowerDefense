@@ -9,7 +9,7 @@ namespace Battle.Shared
 
         protected override int CheckCollider(Vector2 center, ContactFilter2D filter)
         {
-            return Physics2D.OverlapBox(center, new Vector2(ScanWidth, ScanHeight), 0, filter, ColliderBuffer);            
+            return Physics2D.OverlapBox(center, new Vector2(ScanWidth, ScanHeight), 0, filter, ColliderBuffer);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Battle.Card
     {
         [SerializeField] private BattleSession battleSession;
         [SerializeField] private List<CardConfig> debugCardConfigs;
-        private int _ownerId;
+        private int _factionLayer;
         private CardSlotsPresenter _presenter;
 
         private List<CardConfig> CardConfigs => debugCardConfigs;
@@ -32,17 +32,17 @@ namespace Battle.Card
 
         public void UseCard(CardConfig config)
         {
-            (Spawner spawner, bool ok) = battleSession.GetSpawner(_ownerId);
-            Debug.Log($"UseCard {ok}");
+            (Spawner spawner, bool ok) = battleSession.GetSpawner(_factionLayer);
+            Debug.Log($"[{_factionLayer}]UseCard {(ok ? "Success" : "Fail")}");
             if (!ok)
                 return;
 
             spawner.Spawn(config.UnitConfig);
         }
 
-        public void SetOwnerId(int ownerId)
+        public void SetFactionLayer(int factionLayer)
         {
-            _ownerId = ownerId;
+            _factionLayer = factionLayer;
         }
     }
 }

@@ -9,9 +9,9 @@ namespace Battle.Unit.Ranged
     {
         public ProjectileShooter shooter;
 
-        protected override void OnProvideSession(BattleSession session)
+        protected override void OnBindContext(UnitContext unitContext)
         {
-            shooter.ProvideContainer(session.ProjectileContainer);
+            shooter.ProvideContainer(unitContext.BattleSession.ProjectileContainer);
         }
 
         protected override void AttackDetection()
@@ -19,17 +19,14 @@ namespace Battle.Unit.Ranged
             shooter.SetAttackDamage(Context.UnitEntity.AttackDamage);
             shooter.SetAttackLayerMask(Context.EnemyScanner.LayerMask);
 
-
-            if (!Context.CurrentTarget.TryGetComponent(out IAttackTarget attackTarget))
-            {
+            if (Context.CurrentTarget == null)
                 return;
-            }
+
+            if (!Context.CurrentTarget.GameObject.TryGetComponent(out IAttackTarget attackTarget)) return;
 
             Vector2 from = agent.Center;
             Vector3 to = attackTarget.Center;
             shooter.Shoot(from, to);
         }
-        
-        
     }
 }

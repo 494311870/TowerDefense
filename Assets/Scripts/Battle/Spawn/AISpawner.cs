@@ -1,7 +1,6 @@
 ﻿#region
 
 using System.Collections;
-using Battle.Unit;
 using Battle.Unit.Shared;
 using UnityEngine;
 

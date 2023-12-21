@@ -22,6 +22,8 @@ namespace Battle.Shared
 
         public LayerMask LayerMask { get; set; }
 
+        public bool IsDetected => Target != null;
+
         public void Scan(Vector2 center)
         {
             var filter = new ContactFilter2D

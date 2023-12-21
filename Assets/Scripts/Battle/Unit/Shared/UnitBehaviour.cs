@@ -16,18 +16,9 @@ namespace Battle.Unit.Shared
 
         private StateMachine<UnitContext> _stateMachine;
         protected UnitContext Context { get; private set; }
-        public BattleSession BattleSession { get; set; }
 
         private void Awake()
         {
-            Context = new UnitContext
-            {
-                UnitAgent = agent,
-                UnitEntity = new UnitEntity(),
-                EnemyScanner = new CircleTargetScanner(),
-                FriendScanner = new RectTargetScanner()
-            };
-            _stateMachine = new UnitStateMachine(Context);
             OnInit();
         }
 
@@ -36,9 +27,13 @@ namespace Battle.Unit.Shared
             _stateMachine.Update(Time.fixedDeltaTime);
         }
 
-        public Vector2 Center => agent.Center;
+        bool ITarget.IsInvalid => Context.UnitEntity.IsDead;
+        int ITarget.FactionLayer => Context.FactionLayer;
+        Vector2 ITarget.Position => agent.Position;
+        Vector2 ITarget.Center => agent.Center;
+        GameObject ITarget.GameObject => agent.gameObject;
 
-        public void Hurt(int damage)
+        void IAttackTarget.Hurt(int damage)
         {
             if (Context.UnitEntity.IsDead)
                 return;
@@ -48,48 +43,50 @@ namespace Battle.Unit.Shared
             Context.UnitEntity.Hurt(damage);
         }
 
-
         protected virtual void OnInit()
         {
         }
 
-        public void ProvideData(IReadonlyUnitData unitData)
+        private void InitStateMachine(UnitContext unitContext)
         {
-            Context.UnitOriginalData = unitData;
-            Context.UnitEntity.Load(unitData);
+            _stateMachine = new StateMachine<UnitContext>(unitContext);
+            IStateMachineBuilder<UnitContext> stateMachineBuilder = GetStateMachineBuilder();
+            stateMachineBuilder.BuildStates(_stateMachine);
+            stateMachineBuilder.BuildTransitions(_stateMachine);
+            _stateMachine.ResetState();
+        }
 
-            CircleTargetScanner enemyScanner = Context.EnemyScanner;
-            RectTargetScanner friendScanner = Context.FriendScanner;
+        protected virtual IStateMachineBuilder<UnitContext> GetStateMachineBuilder()
+        {
+            return new UnitStateMachineBuilder();
+        }
 
+        public void BindContext(UnitContext unitContext)
+        {
+            Context = unitContext;
+            InitScanner(unitContext);
+            InitStateMachine(unitContext);
+            OnBindContext(unitContext);
+        }
+
+        private void InitScanner(UnitContext unitContext)
+        {
+            var enemyScanner = new CircleTargetScanner();
+            var friendScanner = new RectTargetScanner();
+
+            unitContext.EnemyScanner = enemyScanner;
+            unitContext.FriendScanner = friendScanner;
+            unitContext.UpdateScannerLayer();
+
+            IReadonlyUnitData unitData = unitContext.UnitOriginalData;
             enemyScanner.ScanRange = ConvertToWorldDistance(unitData.ThreatRange);
             friendScanner.ScanWidth = ConvertToWorldDistance(unitData.FriendSpace);
             friendScanner.ScanHeight = agent.unitCollider.bounds.size.y;
             friendScanner.AddIgnored(agent.unitCollider);
-
-            OnProvideData(unitData);
-        }
-
-        protected virtual void OnProvideData(IReadonlyUnitData unitData)
-        {
-        }
-
-        public void SetMoveTarget(Transform target)
-        {
-            Context.MarchTarget = target;
-        }
-
-        public void SetEnemyLayer(LayerMask layerMask)
-        {
-            Context.EnemyScanner.LayerMask = layerMask;
-        }
-
-        public void SetFriendLayer(LayerMask layerMask)
-        {
-            Context.FriendScanner.LayerMask = layerMask;
         }
 
         /// <summary>
-        /// 提供给动画的攻击命中事件
+        ///     提供给动画的攻击命中事件
         /// </summary>
         private void OnAttackAnimationEvent()
         {
@@ -99,20 +96,8 @@ namespace Battle.Unit.Shared
 
         protected abstract void AttackDetection();
 
-        public void ProvideSession(BattleSession session)
+        protected virtual void OnBindContext(UnitContext session)
         {
-            BattleSession = session;
-            Context.BattleSession = session;
-            OnProvideSession(session);
-        }
-
-        protected virtual void OnProvideSession(BattleSession session)
-        {
-        }
-
-        public void ResetState()
-        {
-            _stateMachine.ResetState();
         }
     }
 }

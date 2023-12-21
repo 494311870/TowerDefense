@@ -1,5 +1,4 @@
-﻿using Battle.Unit;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Battle.Projectile
 {

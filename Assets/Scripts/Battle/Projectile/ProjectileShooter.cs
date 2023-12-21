@@ -8,14 +8,9 @@ namespace Battle.Projectile
         public ProjectileConfig projectileConfig;
 
         private int _attackDamage;
+        private LayerMask _attackLayerMask;
         private Transform _container;
         private ObjectPool<ProjectileBehaviour> _projectilePool;
-        private LayerMask _attackLayerMask;
-
-        public void SetAttackLayerMask(LayerMask value)
-        {
-            _attackLayerMask = value;
-        }
 
         private void Awake()
         {
@@ -23,13 +18,16 @@ namespace Battle.Projectile
                 OnDestroyPoolObject);
         }
 
+        public void SetAttackLayerMask(LayerMask value)
+        {
+            _attackLayerMask = value;
+        }
+
         private ProjectileBehaviour CreatePooledItem()
         {
             GameObject instance = Instantiate(projectileConfig.prefab, _container);
             if (instance.TryGetComponent(out ProjectileBehaviour projectileBehaviour))
-            {
                 projectileBehaviour.OnRecycle = OnProjectileRecycle;
-            }
 
             return projectileBehaviour;
         }

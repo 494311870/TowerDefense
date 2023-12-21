@@ -8,12 +8,12 @@ namespace Battle.Projectile
         private Vector3 _velocity;
         public Vector2 Center => transform.position;
 
-        public event Action DeathEvent;
-
         private void Update()
         {
-            this.transform.position += _velocity * Time.deltaTime;
+            transform.position += _velocity * Time.deltaTime;
         }
+
+        public event Action DeathEvent;
 
         public void InputVelocity(Vector2 velocity)
         {

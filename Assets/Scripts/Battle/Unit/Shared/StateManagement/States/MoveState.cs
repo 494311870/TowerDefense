@@ -29,7 +29,7 @@ namespace Battle.Unit.Shared.StateManagement.States
 
         protected Vector2 GetMoveDirection()
         {
-            Vector2 result = Context.CurrentTarget.position - Context.UnitAgent.transform.position;
+            Vector2 result = Context.CurrentTarget.Position - Context.UnitAgent.Position;
             return result.normalized;
         }
 
@@ -41,7 +41,7 @@ namespace Battle.Unit.Shared.StateManagement.States
             Vector2 forwardOffset = friendScanner.ScanWidth * direction;
             friendScanner.Scan(agent.Center + forwardOffset);
 
-            return friendScanner.Target != null;
+            return friendScanner.IsDetected;
         }
 
         protected void WaitingInPlace()

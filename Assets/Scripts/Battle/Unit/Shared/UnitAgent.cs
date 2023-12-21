@@ -41,6 +41,8 @@ namespace Battle.Unit.Shared
             }
         }
 
+        public Vector2 Position => transform.position;
+
         // Update is called once per frame
         private void Update()
         {
@@ -134,7 +136,7 @@ namespace Battle.Unit.Shared
         public virtual void Hurt(int damage)
         {
             // unitAnimator.SetTrigger("Hurt");
-            Debug.Log($"Hurt  {this.name} {damage}");
+            Debug.Log($"Hurt  {name} {damage}");
         }
 
         public virtual void Death()

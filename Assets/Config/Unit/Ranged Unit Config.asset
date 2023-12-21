@@ -17,7 +17,7 @@ MonoBehaviour:
     health: 100
     moveSpeed: 200
     threatRange: 5000
-    attackDamage: 10
+    attackDamage: 20
     attackSpeed: 150
     attackRange: 3600
     friendSpace: 100

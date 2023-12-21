@@ -9,20 +9,25 @@ namespace Battle.Projectile
     public class ProjectileBehaviour : MonoBehaviour
     {
         public ProjectileAgent agent;
+        private ProjectileContext _context;
 
         private ProjectileStateMachine _stateMachine;
-        private ProjectileContext _context;
         public Action<ProjectileBehaviour> OnRecycle { get; set; }
 
         private void Awake()
         {
-            _context = new ProjectileContext()
+            _context = new ProjectileContext
             {
                 ProjectileAgent = agent,
                 HitScanner = new CircleTargetScanner(),
                 ProjectileEntity = new ProjectileEntity()
             };
             _stateMachine = new ProjectileStateMachine(_context);
+        }
+
+        private void FixedUpdate()
+        {
+            _stateMachine.Update(Time.fixedDeltaTime);
         }
 
 
@@ -36,11 +41,6 @@ namespace Battle.Projectile
             agent.DeathEvent -= Recycle;
         }
 
-        private void FixedUpdate()
-        {
-            _stateMachine.Update(Time.fixedDeltaTime);
-        }
-
         private void Recycle()
         {
             OnRecycle?.Invoke(this);
@@ -52,6 +52,7 @@ namespace Battle.Projectile
             hitScanner.ScanRange = ConvertToWorldDistance(projectileData.AttackRange);
             _context.ProjectileData = projectileData;
             _context.ProjectileEntity.Load(projectileData);
+            _context.IsConsumed = false;
         }
 
 
@@ -77,7 +78,7 @@ namespace Battle.Projectile
 
         public void SetAttackLayerMask(LayerMask attackLayerMask)
         {
-           _context.HitScanner.LayerMask = attackLayerMask;
+            _context.HitScanner.LayerMask = attackLayerMask;
         }
     }
 }

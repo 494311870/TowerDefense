@@ -1,11 +1,7 @@
-﻿using UnityEngine;
-
-namespace Battle.Shared
+﻿namespace Battle.Shared
 {
-    public interface IAttackTarget
+    public interface IAttackTarget : ITarget
     {
         void Hurt(int damage);
-
-        Vector2 Center { get; }
     }
 }

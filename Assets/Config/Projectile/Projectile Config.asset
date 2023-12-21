@@ -16,4 +16,4 @@ MonoBehaviour:
   projectileData:
     attackRange: 30
     prepareTime: 0
-    moveSpeed: 500
+    moveSpeed: 800

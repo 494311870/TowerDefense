@@ -8,7 +8,6 @@ namespace Battle.Card
 {
     public class CardSlotsController : MonoBehaviour
     {
-        public int ownerId;
         public CardInteractor interactor;
         public CardSlots cardSlots;
 
@@ -16,7 +15,7 @@ namespace Battle.Card
         private void OnEnable()
         {
             cardSlots.UseCardEvent += CardSlotsOnUseCardEvent;
-            interactor.SetOwnerId(ownerId);
+            interactor.SetFactionLayer(gameObject.layer);
         }
 
         private void OnDisable()

@@ -15,9 +15,9 @@ MonoBehaviour:
   prefab: {fileID: 6323719953710832613, guid: a4b4a6d32bcb19248a754d6602ffc7e4, type: 3}
   unitData:
     health: 100
-    moveSpeed: 200
+    moveSpeed: 300
     threatRange: 240
-    attackDamage: 20
-    attackSpeed: 50
+    attackDamage: 25
+    attackSpeed: 200
     attackRange: 120
     friendSpace: 80

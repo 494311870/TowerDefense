@@ -11,9 +11,11 @@
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            
+
             Context.ScanEnemy();
-            Context.SelectEnemyAsTarget();
+
+            // if (!Context.EnemyScanner.IsDetected)
+            //     Context.ClearCurrentTarget();
         }
     }
 }

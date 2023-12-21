@@ -1,8 +1,7 @@
 #region
 
-using System;
+using Battle.Faction;
 using Battle.Shared;
-using Battle.Unit;
 using Battle.Unit.Shared;
 using UnityEngine;
 
@@ -13,12 +12,9 @@ namespace Battle.Spawn
     public class Spawner : MonoBehaviour
     {
         public BattleSession battleSession;
-        public Transform moveTarget;
+
+        // public Transform moveTarget;
         public Transform container;
-
-        public string friendLayer;
-        public string enemyLayer;
-
 
         public void Spawn(UnitConfig unitConfig)
         {
@@ -28,20 +24,31 @@ namespace Battle.Spawn
             ResetUnit(instance, unitConfig);
         }
 
-
         private void ResetUnit(GameObject instance, UnitConfig unitConfig)
         {
-            instance.layer = LayerMask.NameToLayer(friendLayer);
-            if (instance.TryGetComponent(out UnitBehaviour unitBehaviour))
+            int factionLayer = gameObject.layer;
+            instance.layer = factionLayer;
+
+            (FactionContext factionContext, bool ok) = battleSession.GetFaction(factionLayer);
+            if (!ok)
             {
-                unitBehaviour.ProvideSession(battleSession);
-                unitBehaviour.ProvideData(unitConfig.unitData);
-                unitBehaviour.SetMoveTarget(moveTarget);
-                unitBehaviour.SetEnemyLayer(LayerMask.GetMask(enemyLayer));
-                unitBehaviour.SetFriendLayer(LayerMask.GetMask(friendLayer));
-                unitBehaviour.ResetState();
+                Debug.LogWarning($"Spawn Unit Failed: FactionContext Not Found [{factionLayer}]");
+                return;
             }
+
+            UnitContext unitContext = factionContext.CreateUnit();
+            factionContext.AddUnit(unitContext);
+
+            unitContext.JoinBattle(battleSession);
+            unitContext.Load(unitConfig.unitData);
+
+            if (instance.TryGetComponent(out UnitAgent agent))
+                unitContext.UnitAgent = agent;
+
+            if (instance.TryGetComponent(out UnitBehaviour unitBehaviour))
+                unitBehaviour.BindContext(unitContext);
         }
+
 
         private static void ResetTransform(Transform transform)
         {

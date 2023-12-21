@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Battle.Projectile
+﻿namespace Battle.Projectile
 {
     public class ProjectileEntity
     {

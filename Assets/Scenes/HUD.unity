@@ -408,7 +408,7 @@ GameObject:
   - component: {fileID: 1423672492}
   - component: {fileID: 1423672494}
   - component: {fileID: 1423672493}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -447,7 +447,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3592327739784bbf9117d81bb1b1e687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownerId: 0
   interactor: {fileID: 11400000, guid: 5cb65aee3aa853e408f20e4af96230f0, type: 2}
   cardSlots: {fileID: 523762010}
 --- !u!114 &1423672494
