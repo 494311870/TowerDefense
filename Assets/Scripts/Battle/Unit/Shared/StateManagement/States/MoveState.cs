@@ -12,6 +12,9 @@ namespace Battle.Unit.Shared.StateManagement.States
             if (IsStationed())
                 return;
 
+            if (Context.TargetIsInvalid)
+                return;
+
             Vector2 direction = GetMoveDirection();
             if (HasAnyFriendlyBlock(direction))
             {
@@ -29,7 +32,7 @@ namespace Battle.Unit.Shared.StateManagement.States
 
         protected Vector2 GetMoveDirection()
         {
-            Vector2 result = Context.CurrentTarget.Position - Context.UnitAgent.Position;
+            Vector2 result = Context.Target.Position - Context.UnitAgent.Position;
             return result.normalized;
         }
 

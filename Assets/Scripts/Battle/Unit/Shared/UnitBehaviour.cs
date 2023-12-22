@@ -50,6 +50,7 @@ namespace Battle.Unit.Shared
         private void InitStateMachine(UnitContext unitContext)
         {
             _stateMachine = new StateMachine<UnitContext>(unitContext);
+            _stateMachine.LogState = true;
             IStateMachineBuilder<UnitContext> stateMachineBuilder = GetStateMachineBuilder();
             stateMachineBuilder.BuildStates(_stateMachine);
             stateMachineBuilder.BuildTransitions(_stateMachine);

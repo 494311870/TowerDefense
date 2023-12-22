@@ -7,39 +7,34 @@ namespace Battle.Unit.Shared.StateManagement.States
 {
     public class AttackState : State<UnitContext>
     {
-        private float _attackCoolDown;
 
         public override void Enter()
         {
-            _attackCoolDown = 0f;
-            Context.UnitAgent.ResetAttackCombo();
             Context.UnitAgent.WaitingInPlace();
         }
 
         public override void Update(float deltaTime)
         {
-            UpdateAttackCoolDown(deltaTime);
-            LookAtTarget();
+            Context.UnitEntity.CoolingAttack(deltaTime);
             TryAttack();
-        }
-
-        private void UpdateAttackCoolDown(float deltaTime)
-        {
-            if (_attackCoolDown >= 0)
-                _attackCoolDown -= deltaTime;
+            
+            // if (Context.TargetIsInvalid)
+            // {
+            //     Context.ScanEnemy();
+            //     Context.SelectEnemyAsTarget();
+            // }
+            // else
+            {
+                LookAtTarget();
+            }
         }
 
         private void LookAtTarget()
         {
-            CircleTargetScanner enemyScanner = Context.EnemyScanner;
-            // 这时候敌人可能已经不存在了
-            if (!enemyScanner.IsDetected)
-                return;
-
-            Collider2D target = enemyScanner.Target;
+            ITarget target = Context.Target;
             UnitAgent agent = Context.UnitAgent;
 
-            agent.LookAt(target.transform.position);
+            agent.LookAt(target.Position);
         }
 
         private void TryAttack()
@@ -50,16 +45,13 @@ namespace Battle.Unit.Shared.StateManagement.States
 
         private void Attack()
         {
-            int attackSpeed = Context.UnitEntity.AttackSpeed;
-            float attackInterval = ConvertToAttackInterval(attackSpeed);
-            _attackCoolDown = attackInterval;
-
+            Context.UnitEntity.Attack();
             Context.UnitAgent.Attack();
         }
 
         private bool CanAttack()
         {
-            return _attackCoolDown <= 0;
+            return Context.UnitEntity.AttackIsReady;
         }
     }
 }

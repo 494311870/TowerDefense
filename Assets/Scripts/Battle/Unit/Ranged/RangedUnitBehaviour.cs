@@ -19,10 +19,10 @@ namespace Battle.Unit.Ranged
             shooter.SetAttackDamage(Context.UnitEntity.AttackDamage);
             shooter.SetAttackLayerMask(Context.EnemyScanner.LayerMask);
 
-            if (Context.CurrentTarget == null)
+            if (Context.Target == null)
                 return;
 
-            if (!Context.CurrentTarget.GameObject.TryGetComponent(out IAttackTarget attackTarget)) return;
+            if (!Context.Target.GameObject.TryGetComponent(out IAttackTarget attackTarget)) return;
 
             Vector2 from = agent.Center;
             Vector3 to = attackTarget.Center;

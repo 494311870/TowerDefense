@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 #endregion
 
@@ -19,6 +20,8 @@ namespace StateManagement
         private IState _jumpToState;
 
         private IState _rootState;
+
+        public bool LogState { get; set; } 
 
         public StateMachine(T context)
         {
@@ -94,6 +97,10 @@ namespace StateManagement
             }
 
             _currentState?.Update(deltaTime);
+            if (_currentState != null && LogState)
+            {
+                Debug.Log($"{_currentState.GetType().Name}");
+            }
 
             CheckTransitions();
         }
@@ -120,6 +127,9 @@ namespace StateManagement
 
         private void Enter(IState state)
         {
+            if (state == _currentState)
+                return;
+            
             _currentState?.Exit();
             _currentState = state;
             state.Enter();

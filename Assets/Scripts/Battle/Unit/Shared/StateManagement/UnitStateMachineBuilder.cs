@@ -59,7 +59,7 @@ namespace Battle.Unit.Shared.StateManagement
 
         private static bool TargetInRange(UnitContext context, int checkRange)
         {
-            ITarget currentTarget = context.CurrentTarget;
+            ITarget currentTarget = context.Target;
             if (currentTarget == null || currentTarget.IsInvalid)
                 return false;
 

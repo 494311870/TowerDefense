@@ -17,7 +17,11 @@ namespace Battle.Unit.Shared
         /// </summary>
         public int FactionLayer { get; set; }
 
-        public ITarget CurrentTarget { get; set; }
+        /// <summary>
+        /// 当前的目标
+        /// </summary>
+        public ITarget Target { get; set; }
+
         public CircleTargetScanner EnemyScanner { get; set; }
         public RectTargetScanner FriendScanner { get; set; }
         public ITarget MarchTarget { get; set; }
@@ -25,6 +29,8 @@ namespace Battle.Unit.Shared
         public UnitEntity UnitEntity { get; }
         public IReadonlyUnitData UnitOriginalData { get; private set; }
         public BattleSession BattleSession { get; set; }
+
+        public bool TargetIsInvalid => Target == null || Target.IsInvalid;
 
         public void Dispose()
         {
@@ -42,12 +48,12 @@ namespace Battle.Unit.Shared
         {
             if (!EnemyScanner.IsDetected)
             {
-                CurrentTarget = null;
+                Target = null;
                 return;
             }
 
             EnemyScanner.Target.TryGetComponent(out IAttackTarget attackTarget);
-            CurrentTarget = attackTarget;
+            Target = attackTarget;
         }
 
         public void Load(IReadonlyUnitData unitData)
@@ -95,7 +101,7 @@ namespace Battle.Unit.Shared
 
         public void ClearCurrentTarget()
         {
-            CurrentTarget = null;
+            Target = null;
         }
     }
 }

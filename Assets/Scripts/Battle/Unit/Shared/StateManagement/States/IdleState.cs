@@ -9,6 +9,8 @@ namespace Battle.Unit.Shared.StateManagement.States
         {
             Debug.Log("Context == null");
             Context.UnitAgent.WaitingInPlace();
+            Context.UnitAgent.ResetAttackCombo();
+            Context.UnitEntity.CancelAttackCoolDown();
         }
 
         public override void Update(float deltaTime)

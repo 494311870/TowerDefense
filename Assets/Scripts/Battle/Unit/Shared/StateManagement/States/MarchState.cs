@@ -5,7 +5,7 @@
         public override void Enter()
         {
             base.Enter();
-            Context.CurrentTarget = Context.MarchTarget;
+            Context.Target = Context.MarchTarget;
         }
 
         public override void Update(float deltaTime)
