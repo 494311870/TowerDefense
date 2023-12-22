@@ -72,13 +72,13 @@ namespace StateManagement
 
         public void AddTransition(Transition<T> transition)
         {
-            if (_transitionMap.ContainsKey(transition.From))
+            if (_transitionMap.TryGetValue(transition.From, out List<Transition<T>> transitions))
             {
-                _transitionMap[transition.From].Add(transition);
+                transitions.Add(transition);
             }
             else
             {
-                List<Transition<T>> transitions = new() { transition };
+                transitions = new List<Transition<T>> { transition };
                 _transitionMap.Add(transition.From, transitions);
             }
         }
